@@ -1,0 +1,364 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard CurrencyCulture="en-US">
+  <Title Text="Financial Dashboard" Alignment="Left" />
+  <DataSources>
+    <ExcelDataSource Name="Assets Structure" FileName="|DataDirectory|Financial.xlsx" ComponentName="dashboardExcelDataSource1">
+      <Options Type="DevExpress.DataAccess.Excel.ExcelSourceOptions" SkipEmptyRows="true" UseFirstRowAsHeader="true" SkipHiddenColumns="true" SkipHiddenRows="true">
+        <ImportSettings Type="DevExpress.DataAccess.Excel.ExcelWorksheetSettings" WorksheetName="AssetsStructure" />
+      </Options>
+      <Schema>
+        <FieldInfo Name="Category" Type="System.String" Selected="true" />
+        <FieldInfo Name="Value" Type="System.Double" Selected="true" />
+      </Schema>
+      <ResultSchema>
+        <View>
+          <Field Name="Category" Type="String" />
+          <Field Name="Value" Type="Double" />
+        </View>
+      </ResultSchema>
+    </ExcelDataSource>
+    <ExcelDataSource Name="Current Stocks" FileName="|DataDirectory|Financial.xlsx" ComponentName="dashboardExcelDataSource2">
+      <Options Type="DevExpress.DataAccess.Excel.ExcelSourceOptions" SkipEmptyRows="true" UseFirstRowAsHeader="true" SkipHiddenColumns="true" SkipHiddenRows="true">
+        <ImportSettings Type="DevExpress.DataAccess.Excel.ExcelWorksheetSettings" WorksheetName="Current_Stocks" />
+      </Options>
+      <Schema>
+        <FieldInfo Name="Date" Type="System.DateTime" Selected="true" />
+        <FieldInfo Name="Open" Type="System.Double" Selected="true" />
+        <FieldInfo Name="High" Type="System.Double" Selected="true" />
+        <FieldInfo Name="Low" Type="System.Double" Selected="true" />
+        <FieldInfo Name="Close" Type="System.Double" Selected="true" />
+        <FieldInfo Name="Ticker" Type="System.String" Selected="true" />
+        <FieldInfo Name="Category" Type="System.String" Selected="true" />
+        <FieldInfo Name="Description" Type="System.String" Selected="true" />
+      </Schema>
+      <ResultSchema>
+        <View>
+          <Field Name="Date" Type="DateTime" />
+          <Field Name="Open" Type="Double" />
+          <Field Name="High" Type="Double" />
+          <Field Name="Low" Type="Double" />
+          <Field Name="Close" Type="Double" />
+          <Field Name="Ticker" Type="String" />
+          <Field Name="Category" Type="String" />
+          <Field Name="Description" Type="String" />
+        </View>
+      </ResultSchema>
+    </ExcelDataSource>
+    <ExcelDataSource Name="Daily Data" FileName="|DataDirectory|Financial.xlsx" ComponentName="dashboardExcelDataSource3">
+      <Options Type="DevExpress.DataAccess.Excel.ExcelSourceOptions" SkipEmptyRows="true" UseFirstRowAsHeader="true" SkipHiddenColumns="true" SkipHiddenRows="true">
+        <ImportSettings Type="DevExpress.DataAccess.Excel.ExcelWorksheetSettings" WorksheetName="DailyData" />
+      </Options>
+      <Schema>
+        <FieldInfo Name="id" Type="System.Double" Selected="false" />
+        <FieldInfo Name="Date" Type="System.DateTime" Selected="true" />
+        <FieldInfo Name="Open" Type="System.Double" Selected="true" />
+        <FieldInfo Name="High" Type="System.Double" Selected="true" />
+        <FieldInfo Name="Low" Type="System.Double" Selected="true" />
+        <FieldInfo Name="Close" Type="System.Double" Selected="true" />
+        <FieldInfo Name="Volume" Type="System.Double" Selected="true" />
+        <FieldInfo Name="Ticker" Type="System.String" Selected="true" />
+      </Schema>
+      <ResultSchema>
+        <View>
+          <Field Name="Date" Type="DateTime" />
+          <Field Name="Open" Type="Double" />
+          <Field Name="High" Type="Double" />
+          <Field Name="Low" Type="Double" />
+          <Field Name="Close" Type="Double" />
+          <Field Name="Volume" Type="Double" />
+          <Field Name="Ticker" Type="String" />
+        </View>
+      </ResultSchema>
+      <Filter>[Date] Between(?startTime, ?endTime)</Filter>
+    </ExcelDataSource>
+    <ExcelDataSource Name="Trade Data" FileName="|DataDirectory|Financial.xlsx" ComponentName="dashboardExcelDataSource4">
+      <Options Type="DevExpress.DataAccess.Excel.ExcelSourceOptions" SkipEmptyRows="true" UseFirstRowAsHeader="true" SkipHiddenColumns="true" SkipHiddenRows="true">
+        <ImportSettings Type="DevExpress.DataAccess.Excel.ExcelWorksheetSettings" WorksheetName="TradeData" />
+      </Options>
+      <Schema>
+        <FieldInfo Name="id" Type="System.Double" Selected="false" />
+        <FieldInfo Name="Date" Type="System.DateTime" Selected="true" />
+        <FieldInfo Name="Ticker" Type="System.String" Selected="true" />
+        <FieldInfo Name="Volume" Type="System.Double" Selected="true" />
+        <FieldInfo Name="FixedProfit" Type="System.Double" Selected="true" />
+        <FieldInfo Name="PotentialProfit" Type="System.Double" Selected="true" />
+      </Schema>
+      <ResultSchema>
+        <View>
+          <Field Name="Date" Type="DateTime" />
+          <Field Name="Ticker" Type="String" />
+          <Field Name="Volume" Type="Double" />
+          <Field Name="FixedProfit" Type="Double" />
+          <Field Name="PotentialProfit" Type="Double" />
+        </View>
+      </ResultSchema>
+    </ExcelDataSource>
+    <ExcelDataSource Name="Current Assets" FileName="|DataDirectory|Financial.xlsx" ComponentName="dashboardExcelDataSource5">
+      <Options Type="DevExpress.DataAccess.Excel.ExcelSourceOptions" SkipEmptyRows="true" UseFirstRowAsHeader="true" SkipHiddenColumns="true" SkipHiddenRows="true">
+        <ImportSettings Type="DevExpress.DataAccess.Excel.ExcelWorksheetSettings" WorksheetName="Current_Assets" />
+      </Options>
+      <Schema>
+        <FieldInfo Name="Date" Type="System.DateTime" Selected="true" />
+        <FieldInfo Name="Ticker" Type="System.String" Selected="true" />
+        <FieldInfo Name="Volume" Type="System.Double" Selected="true" />
+        <FieldInfo Name="BuyValue" Type="System.Double" Selected="true" />
+        <FieldInfo Name="SellValue" Type="System.Double" Selected="true" />
+        <FieldInfo Name="PotentialProfit" Type="System.Double" Selected="true" />
+      </Schema>
+      <ResultSchema>
+        <View>
+          <Field Name="Date" Type="DateTime" />
+          <Field Name="Ticker" Type="String" />
+          <Field Name="Volume" Type="Double" />
+          <Field Name="BuyValue" Type="Double" />
+          <Field Name="SellValue" Type="Double" />
+          <Field Name="PotentialProfit" Type="Double" />
+        </View>
+      </ResultSchema>
+      <CalculatedFields>
+        <CalculatedField Name="Profit" Expression="ToDecimal([SellValue] - [BuyValue])" DataType="Auto" />
+      </CalculatedFields>
+    </ExcelDataSource>
+  </DataSources>
+  <Parameters>
+    <Parameter Name="startTime" Type="System.DateTime" Value="2019-01-01T00:00:00" Description="From date" />
+    <Parameter Name="endTime" Type="System.DateTime" Value="2020-01-01T00:00:00" Description="To date" />
+  </Parameters>
+  <Items>
+    <Card ComponentName="cardPortfolio" Name="Portfolio" ShowCaption="false" DataSource="dashboardExcelDataSource2" IsMasterFilterCrossDataSource="true" ContentLineCount="2">
+      <InteractivityOptions MasterFilterMode="Single" />
+      <DataItems>
+        <Measure DataMember="Open" SummaryType="Average" DefaultId="DataItem2" />
+        <Dimension DataMember="Ticker" DefaultId="DataItem3" />
+        <Measure DataMember="Close" SummaryType="Average" DefaultId="DataItem1">
+          <NumericFormat FormatType="Currency" />
+        </Measure>
+        <Dimension DataMember="Description" DefaultId="DataItem0" />
+      </DataItems>
+      <SeriesDimensions>
+        <SeriesDimension DefaultId="DataItem0" />
+        <SeriesDimension DefaultId="DataItem3" />
+      </SeriesDimensions>
+      <Card>
+        <ActualValue DefaultId="DataItem1" />
+        <TargetValue DefaultId="DataItem2" />
+        <AbsoluteVariationNumericFormat />
+        <PercentVariationNumericFormat />
+        <PercentOfTargetNumericFormat />
+        <LayoutTemplate MinWidth="125" Type="Compact">
+          <MainValue Visible="true" ValueType="Title" DimensionIndex="0" />
+          <SubValue Visible="true" ValueType="Subtitle" DimensionIndex="0" />
+          <BottomValue Visible="true" ValueType="ActualValue" DimensionIndex="0" />
+          <BottomSubValue1 Visible="true" ValueType="AbsoluteVariation" DimensionIndex="0" />
+          <BottomSubValue2 Visible="true" ValueType="PercentVariation" DimensionIndex="0" />
+          <DeltaIndicator Visible="true" />
+          <Sparkline Visible="true" />
+        </LayoutTemplate>
+      </Card>
+    </Card>
+    <Chart ComponentName="chartProfit" Name="Realized Profit vs Book Profit" DataSource="dashboardExcelDataSource4" IsMasterFilterCrossDataSource="true">
+      <DataItems>
+        <Measure DataMember="FixedProfit" DefaultId="DataItem0">
+          <NumericFormat FormatType="Currency" />
+        </Measure>
+        <Dimension DataMember="Date" DateTimeGroupInterval="DayMonthYear" DefaultId="DataItem2" />
+        <Measure DataMember="PotentialProfit" DefaultId="DataItem1">
+          <NumericFormat FormatType="Currency" />
+        </Measure>
+      </DataItems>
+      <Arguments>
+        <Argument DefaultId="DataItem2" />
+      </Arguments>
+      <ColorScheme>
+        <Entry DataSource="Profits" DataMember="Profits" PaletteIndex="2">
+          <MeasureKey>
+            <Definition DataMember="FixedProfit" />
+          </MeasureKey>
+        </Entry>
+        <Entry DataSource="Profits" DataMember="Profits" PaletteIndex="3">
+          <MeasureKey>
+            <Definition DataMember="PotentialProfit" />
+          </MeasureKey>
+        </Entry>
+      </ColorScheme>
+      <Panes>
+        <Pane Name="Pane 3">
+          <AxisY TitleVisible="false" Title="ProfitLoss (Sum)">
+            <NumericFormat FormatType="Currency" />
+          </AxisY>
+          <Series>
+            <Simple Name="Realized Profit" SeriesType="StepLine">
+              <Value DefaultId="DataItem0" />
+            </Simple>
+            <Simple Name="Book Profit" SeriesType="StepArea">
+              <Value DefaultId="DataItem1" />
+            </Simple>
+          </Series>
+        </Pane>
+        <Pane Name="Pane 1" />
+      </Panes>
+      <ChartLegend Visible="false" />
+      <AxisX Visible="false" Title="Date (Day-Month-Year)" />
+    </Chart>
+    <Grid ComponentName="gridCurrentAssets" Name="Current Assets" DataSource="dashboardExcelDataSource5">
+      <InteractivityOptions IgnoreMasterFilters="true" />
+      <DataItems>
+        <Dimension DataMember="Ticker" DefaultId="DataItem1" />
+        <Measure DataMember="Profit" Name="Profit" DefaultId="DataItem3" />
+      </DataItems>
+      <FormatRules>
+        <GridItemFormatRule Name="FormatRule 1" DataItem="DataItem3">
+          <FormatConditionRangeSet ValueType="Number">
+            <RangeSet>
+              <Ranges>
+                <RangeInfo>
+                  <Value Type="System.Double" Value="-Infinity" />
+                  <IconSettings IconType="DirectionalRedTriangleDown" />
+                </RangeInfo>
+                <RangeInfo>
+                  <Value Type="System.Decimal" Value="0" />
+                  <IconSettings IconType="DirectionalGreenTriangleUp" />
+                </RangeInfo>
+              </Ranges>
+            </RangeSet>
+          </FormatConditionRangeSet>
+        </GridItemFormatRule>
+        <GridItemFormatRule Name="FormatRule 2" ApplyToRow="true" DataItem="DataItem3">
+          <FormatConditionValue Condition="Less">
+            <AppearanceSettings AppearanceType="FontRed" />
+            <Value1 Type="System.Decimal" Value="0" />
+          </FormatConditionValue>
+        </GridItemFormatRule>
+      </FormatRules>
+      <GridColumns>
+        <GridDimensionColumn Weight="94.76047904191617">
+          <Dimension DefaultId="DataItem1" />
+        </GridDimensionColumn>
+        <GridMeasureColumn Weight="55.23952095808383" WidthType="FitToContent">
+          <Measure DefaultId="DataItem3" />
+        </GridMeasureColumn>
+      </GridColumns>
+      <GridOptions EnableBandedRows="true" ShowHorizontalLines="false" ShowVerticalLines="false" ShowColumnHeaders="false" ColumnWidthMode="Manual" />
+      <ColumnFilterOptions />
+    </Grid>
+    <Chart ComponentName="chartStocks" Name="Stocks" ShowCaption="false" DataSource="dashboardExcelDataSource3">
+      <DataItems>
+        <Measure DataMember="Open" DefaultId="DataItem0" />
+        <Measure DataMember="High" DefaultId="DataItem1" />
+        <Measure DataMember="Low" DefaultId="DataItem2" />
+        <Measure DataMember="Close" DefaultId="DataItem3" />
+        <Dimension DataMember="Date" DateTimeGroupInterval="DayMonthYear" DefaultId="DataItem6">
+          <DateTimeFormat DateFormat="Long" />
+        </Dimension>
+      </DataItems>
+      <Arguments>
+        <Argument DefaultId="DataItem6" />
+      </Arguments>
+      <Panes>
+        <Pane Name="Pane 1">
+          <AxisY Visible="false" Title="Values" AlwaysShowZeroLevel="false" />
+          <Series>
+            <OpenHighLowClose Name="Price" SeriesType="Stock">
+              <Open DefaultId="DataItem0" />
+              <High DefaultId="DataItem1" />
+              <Low DefaultId="DataItem2" />
+              <Close DefaultId="DataItem3" />
+            </OpenHighLowClose>
+          </Series>
+        </Pane>
+      </Panes>
+      <Indicators>
+        <RegressionLine Color="-11309378" ColorDataMember="Price_Regression_Open" DashStyle="Solid" DisplayName="Price Regression_Open" LegendText="Price Regression_Open" Name="RegressionLine1" Value="DataItem0" ShowInLegend="true" Thickness="2" ValueLevel="Open" Visible="true" />
+      </Indicators>
+      <ChartLegend Visible="false" />
+      <AxisX Title="Date" EnableZooming="true">
+        <DateTimeFormat DateFormat="Short" />
+      </AxisX>
+    </Chart>
+    <Chart ComponentName="profitLossChart" Name="Profit &amp; Loss" DataSource="dashboardExcelDataSource1" IsMasterFilterCrossDataSource="true">
+      <ColoringOptions MeasuresColoringMode="None" UseGlobalColors="false" />
+      <InteractivityOptions IgnoreMasterFilters="true" MasterFilterMode="Multiple" />
+      <DataItems>
+        <Dimension DataMember="Category" SortOrder="Descending" ColoringMode="Hue" DefaultId="DataItem0" />
+        <Measure DataMember="Value" DefaultId="DataItem1">
+          <NumericFormat FormatType="Currency" />
+        </Measure>
+      </DataItems>
+      <Arguments>
+        <Argument DefaultId="DataItem0" />
+      </Arguments>
+      <ColorScheme>
+        <Entry DataMember="Assets Structure" PaletteIndex="1">
+          <DimensionKeys>
+            <DimensionKey>
+              <Definition DataMember="Category" />
+              <Value Type="System.String" Value="Loss" />
+            </DimensionKey>
+          </DimensionKeys>
+        </Entry>
+        <Entry DataMember="Assets Structure" PaletteIndex="0">
+          <DimensionKeys>
+            <DimensionKey>
+              <Definition DataMember="Category" />
+              <Value Type="System.String" Value="Profit" />
+            </DimensionKey>
+          </DimensionKeys>
+        </Entry>
+      </ColorScheme>
+      <Panes>
+        <Pane Name="Pane 1">
+          <AxisY Visible="false" TitleVisible="false" ShowGridLines="false" />
+          <Series>
+            <Simple Name="Value">
+              <Value DefaultId="DataItem1" />
+              <PointLabelOptions OverlappingMode="None" Position="Inside" ShowForZeroValues="true" ContentType="Value" />
+            </Simple>
+          </Series>
+        </Pane>
+      </Panes>
+      <ChartLegend Visible="false" />
+      <AxisX Visible="false" />
+    </Chart>
+    <CustomItem ComponentName="customItemDashboardItem1" Name="AI-powered Analytics Assistant 1" DataSource="dashboardExcelDataSource1" CustomItemType="CHAT" />
+  </Items>
+  <ColorScheme>
+    <Entry DataSource="dashboardExcelDataSource1" Color="-5273005">
+      <DimensionKeys>
+        <DimensionKey>
+          <Definition DataMember="Category" />
+          <Value Type="System.String" Value="Profit" />
+        </DimensionKey>
+      </DimensionKeys>
+    </Entry>
+    <Entry DataSource="dashboardExcelDataSource1" Color="-4567727">
+      <DimensionKeys>
+        <DimensionKey>
+          <Definition DataMember="Category" />
+          <Value Type="System.String" Value="Loss" />
+        </DimensionKey>
+      </DimensionKeys>
+    </Entry>
+  </ColorScheme>
+  <LayoutTree>
+    <LayoutGroup Weight="100">
+      <LayoutGroup Orientation="Vertical" Weight="100">
+        <LayoutItem DashboardItem="cardPortfolio" Weight="16.34248670874774" />
+        <LayoutGroup Weight="43.89331079183763">
+          <LayoutItem DashboardItem="customItemDashboardItem1" Weight="60" />
+          <LayoutGroup Orientation="Vertical" Weight="60">
+            <LayoutItem DashboardItem="chartStocks" Weight="50.014436764402056" />
+            <LayoutGroup Weight="48.411109464984804">
+              <LayoutItem DashboardItem="chartProfit" Weight="62.88138954498592" />
+              <LayoutItem DashboardItem="profitLossChart" Weight="11.31215884211085" />
+            </LayoutGroup>
+          </LayoutGroup>
+          <LayoutItem DashboardItem="gridCurrentAssets" Weight="10" />
+        </LayoutGroup>
+      </LayoutGroup>
+    </LayoutGroup>
+  </LayoutTree>
+  <CustomProperties>
+    <Description>["The dashboard shows stock prices for different vendors during a specified trading period. ","You can see detailed data for a specified vendor by selecting a card. The dashboard parameters allow you to change the trading period."]</Description>
+    <Links>[{"href":"https://docs.devexpress.com/Dashboard/117163/web-dashboard/create-dashboards-on-the-web/dashboard-item-settings/cards","text":"Cards"},{"href":"https://docs.devexpress.com/Dashboard/14758/winforms-dashboard/winforms-designer/create-dashboards-in-the-winforms-designer/dashboard-item-settings/chart/series/financial-series","text":"Financial Series"},{"href":"https://docs.devexpress.com/Dashboard/117159/web-dashboard/create-dashboards-on-the-web/dashboard-item-settings/chart","text":"Charts"},{"href":"https://docs.devexpress.com/Dashboard/402204/web-dashboard/create-dashboards-on-the-web/dashboard-item-settings/grid/conditional-formatting","text":"Conditional Formatting  "},{"href":"https://docs.devexpress.com/Dashboard/117062/web-dashboard/create-dashboards-on-the-web/data-analysis/dashboard-parameters","text":"Dashboard Parameters"}]</Links>
+  </CustomProperties>
+</Dashboard>

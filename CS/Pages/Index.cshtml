@@ -1,0 +1,86 @@
+@page
+<script type="text/javascript">
+    const ALL_WIDGETS = 'All widgets';
+    const dashboardItems = [];
+    function customizeChatCustomItemCaptionToolbar(e, dashboardControl) {
+        // Add a new toolbar item to the caption for the specific Custom item.
+        if (e.itemName === 'customItemDashboardItem1') {
+            dashboardItems.splice(0, dashboardItems.length);
+            if(dashboardControl.dashboard && dashboardControl.dashboard().items()) {
+                dashboardItems.push(
+                    ALL_WIDGETS,
+                    ...dashboardControl.dashboard().items().filter(item => !item.name().startsWith(e.dashboardItem._meta.title)).map(item => item.name()));
+            }
+            e.options.actionItems.unshift({
+                hint: 'Select widget',
+                type: 'menu',
+                icon: 'dx-dashboard-toggle-multiselection',
+                menu: {
+                    items: dashboardItems,
+                    selectionMode: 'none',
+                    title: 'Dashboard items',
+                    itemClick: function (itemData) {
+                        e.dashboardItem.selectedSheet = itemData !== ALL_WIDGETS ? itemData : null;
+                        const selectedItemName = 'ai-assistant-selected-item';
+                        e.options.staticItems = e.options.staticItems.filter(item => item.name !== selectedItemName);
+                        if(e.dashboardItem.selectedSheet) {
+                            e.options.staticItems.push({
+                                name: selectedItemName,
+                                type: 'text',
+                                text: ` - ${e.dashboardItem.selectedSheet}`
+                            });
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    let chatAIItem = undefined;
+
+    function handleBeforeRender(dashboardControl) {
+        dashboardControl.registerExtension(new DevExpress.Dashboard.DashboardPanelExtension(dashboardControl));
+        chatAIItem = new AIChatItem(dashboardControl);
+        dashboardControl.registerExtension(chatAIItem);
+        dashboardControl.findExtension('viewerApi').on('itemCaptionToolbarUpdated', (e) => {
+            customizeChatCustomItemCaptionToolbar(e, dashboardControl);
+        });
+  
+    }
+
+    let aiChatItemSubscription = undefined;
+    let chatItemRef = undefined;
+    function handleDashboardInitialized(e) {
+        aiChatItemSubscription?.dispose();
+        const toolbox = e.component.findExtension('toolbox');
+        const customGroup = toolbox.toolboxGroups().find(g => g.name === 'custom');
+        chatItemRef = chatItemRef ?? customGroup.items().find(i => i.title === chatAIItem.metaData.title);
+        const hasChatOnDashboard = e.dashboard.items().find(item => item.name().startsWith(chatAIItem.metaData.title));
+        if(hasChatOnDashboard) {
+            toolbox.removeToolboxItem(customGroup.name, chatAIItem.name);
+        } else {
+            toolbox.addToolboxItem(customGroup.name, chatItemRef);
+        }
+        aiChatItemSubscription = e.dashboard.items.subscribe(changes => {
+            changes.forEach(change => {
+                if(change.value.name().startsWith(chatAIItem.metaData.title)) {
+                    if(change.status === 'added') {
+                        toolbox.removeToolboxItem(customGroup.name, chatAIItem.name);
+                    } else if(change.status === 'deleted') {
+                        toolbox.addToolboxItem(customGroup.name, chatItemRef);
+                    }
+                }
+            });
+        }, null, "arrayChange");
+    }
+</script>
+
+<div style="position: relative; height: calc(100vh - 55px);">
+@(Html.DevExpress().Dashboard("dashboardControl1")
+    .ControllerName("DefaultDashboard")
+    .Width("100%")
+    .Height("100%")
+    .OnBeforeRender("handleBeforeRender")
+    .OnDashboardInitialized("handleDashboardInitialized")
+)
+</div>

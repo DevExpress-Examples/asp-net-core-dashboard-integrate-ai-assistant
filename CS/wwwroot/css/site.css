@@ -1,0 +1,46 @@
+﻿/* Write your CSS */
+body {
+    margin: 0;
+}
+
+div.dx-dashboard-item.dx-chat {
+    display: flex;
+}
+
+.dx-chat-messagelist-content .dx-chat-messagegroup-alignment-start,
+.dx-chat-messagelist-content .dx-chat-last-messagegroup-alignment-start {
+    column-gap: 0;
+}
+
+.dx-chat-messagebubble-content li > ul {
+    margin-bottom: 0;
+}
+
+.dx-chat-messagebubble-content ol,
+.dx-chat-messagebubble-content ul {
+    white-space: normal;
+    margin-left: -1rem;
+    margin-bottom: -1rem;
+}
+
+.dx-chat-messagebubble-content p {
+    margin-bottom: 0;
+}
+
+.dx-chat-messagebubble-content h1,
+.dx-chat-messagebubble-content h2,
+.dx-chat-messagebubble-content h3,
+.dx-chat-messagebubble-content h4,
+.dx-chat-messagebubble-content h5,
+.dx-chat-messagebubble-content h6 {
+    font-size: revert;
+    font-weight: revert;
+}
+
+.dx-chat-messagebubble-content > div > p:first-child {
+    margin-top: 0;
+}
+
+.dx-chat-messagebubble-content > div > p:last-child {
+    margin-bottom: 0;
+}
