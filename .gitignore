@@ -311,3 +311,7 @@ TesterMetadata.xml
 package-lock.json
 
 .angular/
+**/wwwroot/css/ace
+**/wwwroot/css/icons/
+**/wwwroot/css/*bundle.css
+**/wwwroot/js/*bundle.js
