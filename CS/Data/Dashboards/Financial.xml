@@ -125,7 +125,7 @@
     <Parameter Name="endTime" Type="System.DateTime" Value="2020-01-01T00:00:00" Description="To date" />
   </Parameters>
   <Items>
-    <Card ComponentName="cardPortfolio" Name="Portfolio" ShowCaption="false" DataSource="dashboardExcelDataSource2" IsMasterFilterCrossDataSource="true" ContentLineCount="2">
+    <Card ComponentName="cardPortfolio" Name="Portfolio" DataSource="dashboardExcelDataSource2" IsMasterFilterCrossDataSource="true" ContentLineCount="2">
       <InteractivityOptions MasterFilterMode="Single" />
       <DataItems>
         <Measure DataMember="Open" SummaryType="Average" DefaultId="DataItem2" />
@@ -241,7 +241,7 @@
       <GridOptions EnableBandedRows="true" ShowHorizontalLines="false" ShowVerticalLines="false" ShowColumnHeaders="false" ColumnWidthMode="Manual" />
       <ColumnFilterOptions />
     </Grid>
-    <Chart ComponentName="chartStocks" Name="Stocks" ShowCaption="false" DataSource="dashboardExcelDataSource3">
+    <Chart ComponentName="chartStocks" Name="Stocks" DataSource="dashboardExcelDataSource3">
       <DataItems>
         <Measure DataMember="Open" DefaultId="DataItem0" />
         <Measure DataMember="High" DefaultId="DataItem1" />
@@ -319,7 +319,7 @@
       <ChartLegend Visible="false" />
       <AxisX Visible="false" />
     </Chart>
-    <CustomItem ComponentName="customItemDashboardItem1" Name="AI-powered Analytics Assistant 1" DataSource="dashboardExcelDataSource1" CustomItemType="CHAT" />
+    <CustomItem ComponentName="customItemDashboardItem1" Name="AI Assistant" DataSource="dashboardExcelDataSource1" CustomItemType="CHAT" />
   </Items>
   <ColorScheme>
     <Entry DataSource="dashboardExcelDataSource1" Color="-5273005">
@@ -342,23 +342,19 @@
   <LayoutTree>
     <LayoutGroup Weight="100">
       <LayoutGroup Orientation="Vertical" Weight="100">
-        <LayoutItem DashboardItem="cardPortfolio" Weight="16.34248670874774" />
-        <LayoutGroup Weight="43.89331079183763">
-          <LayoutItem DashboardItem="customItemDashboardItem1" Weight="60" />
-          <LayoutGroup Orientation="Vertical" Weight="60">
+        <LayoutItem DashboardItem="cardPortfolio" Weight="16.451492280201602" />
+        <LayoutGroup Weight="43.784305220383764">
+          <LayoutItem DashboardItem="customItemDashboardItem1" Weight="41.93725958502491" />
+          <LayoutGroup Orientation="Vertical" Weight="57.14215011279659">
             <LayoutItem DashboardItem="chartStocks" Weight="50.014436764402056" />
             <LayoutGroup Weight="48.411109464984804">
-              <LayoutItem DashboardItem="chartProfit" Weight="62.88138954498592" />
-              <LayoutItem DashboardItem="profitLossChart" Weight="11.31215884211085" />
+              <LayoutItem DashboardItem="chartProfit" Weight="37.09212586487674" />
+              <LayoutItem DashboardItem="profitLossChart" Weight="37.101422522220034" />
             </LayoutGroup>
           </LayoutGroup>
-          <LayoutItem DashboardItem="gridCurrentAssets" Weight="10" />
+          <LayoutItem DashboardItem="gridCurrentAssets" Weight="30.920590302178496" />
         </LayoutGroup>
       </LayoutGroup>
     </LayoutGroup>
   </LayoutTree>
-  <CustomProperties>
-    <Description>["The dashboard shows stock prices for different vendors during a specified trading period. ","You can see detailed data for a specified vendor by selecting a card. The dashboard parameters allow you to change the trading period."]</Description>
-    <Links>[{"href":"https://docs.devexpress.com/Dashboard/117163/web-dashboard/create-dashboards-on-the-web/dashboard-item-settings/cards","text":"Cards"},{"href":"https://docs.devexpress.com/Dashboard/14758/winforms-dashboard/winforms-designer/create-dashboards-in-the-winforms-designer/dashboard-item-settings/chart/series/financial-series","text":"Financial Series"},{"href":"https://docs.devexpress.com/Dashboard/117159/web-dashboard/create-dashboards-on-the-web/dashboard-item-settings/chart","text":"Charts"},{"href":"https://docs.devexpress.com/Dashboard/402204/web-dashboard/create-dashboards-on-the-web/dashboard-item-settings/grid/conditional-formatting","text":"Conditional Formatting  "},{"href":"https://docs.devexpress.com/Dashboard/117062/web-dashboard/create-dashboards-on-the-web/data-analysis/dashboard-parameters","text":"Dashboard Parameters"}]</Links>
-  </CustomProperties>
 </Dashboard>
