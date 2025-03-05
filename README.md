@@ -5,11 +5,11 @@
 <!-- default badges end -->
 # Dashboard for ASP.NET Core — Integrate AI Assistant based on Azure OpenAI
 
-This example is an ASP.NET Core application with integrated DevExpress Reports and an AI assistant. User requests and assistant responses are displayed on-screen using the DevExtreme [`dxChat`](https://js.devexpress.com/jQuery/Documentation/24_2/ApiReference/UI_Components/dxChat/) component. An AI Assistant [custom dashboard item](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item) is based on the `dxChat` widget.
+This example is an ASP.NET Core application with integrated DevExpress BI Dashboard and an AI assistant. User requests and assistant responses are displayed on-screen using the DevExtreme [`dxChat`](https://js.devexpress.com/jQuery/Documentation/24_2/ApiReference/UI_Components/dxChat/) component. An AI Assistant [custom dashboard item](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item) is based on the `dxChat` widget.
 
 ![DevExpress BI Dashboard - Integrate an AI Assistant](images/dashboard-ai-assistant.png)
 
-The AI Assistant reviews and analyzes all the data displayed in the dashboard to answer your questions. For a more focused analysis, you can select a specific dashboard item. Click the **Values** button in the AI Assistant custom item's caption and choose the desired widget. Any changes to dashboard data—such as updates to parameters or master filters—will automatically trigger a recreation of the AI Assistant. The dashboard data is exported in Excel format and passed to the AI Assistant.
+The AI Assistant reviews and analyzes all the data displayed in the dashboard to answer your questions. For a more focused analysis, you can select a specific dashboard item. Click the **Select widget** button in the AI Assistant custom item's caption and choose the desired widget. Any changes to dashboard data—such as updates to parameters or master filters—will automatically trigger a recreation of the AI Assistant. The dashboard data is exported in Excel format and passed to the AI Assistant.
 
 **Please note that AI Assistant initialization takes time. The assistant is ready for interaction once Microsoft Azure scans the source document on the server side.**
 
@@ -90,7 +90,7 @@ For instructions on how to implement a custom dashboard items, refer to tutorial
 
 For the **AI Assistant** custom item implementation, review to the following file: [aiChatCustomItem.js](./CS/wwwroot/js/aiChatCustomItem.js)
 
-The additional logic for the custom item is implemented in `handleDashboardInitialized` and `customizeChatCustomItemCaptionToolbar` in the [Index.cshtml](./CS/Pages/Index.cshtml) file. The `itemCaptionToolbarUpdated` event is used to add a **Select Widget** button to the item's caption. This button allows users to select a dashboard item for the AI Assistant. The `DashboardInitialized` event is handled to implement the one AI Assistant per dashboard logic.
+The additional logic for the custom item is implemented in the [Index.cshtml](./CS/Pages/Index.cshtml) file. The `itemCaptionToolbarUpdated` event is used to add a **Select Widget** button to the item's caption. This button allows users to select a dashboard item for the AI Assistant. The `DashboardInitialized` event is handled to implement the *one AI Assistant per dashboard* logic.
 
 Files to Review:
 - [Index.cshtml](./CS/Pages/Index.cshtml)
@@ -131,7 +131,7 @@ File to Review:
 
 ### Access the Assistant
 
-Each time a dashboard is initialized or its [dashboard state](https://docs.devexpress.com/Dashboard/DevExpress.DashboardCommon.DashboardState) changes, a new assistant is created and the dashboard data is exported in Excel format. This way the AI assistant is always provided with up-to-date data.
+Each time a dashboard is initialized or its [dashboard state](https://docs.devexpress.com/Dashboard/DevExpress.DashboardCommon.DashboardState) changes, a new assistant is created and the dashboard data is exported in Excel format. This way the AI Assistant is always provided with up-to-date data.
 
 Files to Review: 
 
