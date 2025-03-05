@@ -5,7 +5,7 @@
 <!-- default badges end -->
 # Dashboard for ASP.NET Core — Integrate AI Assistant based on Azure OpenAI
 
-This example is an ASP.NET Core application with integrated DevExpress BI Dashboard and an AI assistant. User requests and assistant responses are displayed on-screen using the DevExtreme [`dxChat`](https://js.devexpress.com/jQuery/Documentation/24_2/ApiReference/UI_Components/dxChat/) component. An AI Assistant [custom dashboard item](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item) is based on the `dxChat` widget.
+This example is an ASP.NET Core application with integrated DevExpress BI Dashboard and an AI assistant. User requests and assistant responses are displayed on-screen using the DevExtreme [`dxChat`](https://js.devexpress.com/jQuery/Documentation/24_2/ApiReference/UI_Components/dxChat/) component. The AI Assistant is implemented as a [custom dashboard item](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item) based on the `dxChat` widget.
 
 ![DevExpress BI Dashboard - Integrate an AI Assistant](images/dashboard-ai-assistant.png)
 
@@ -84,7 +84,7 @@ Files to Review:
 
 ### Create a AI Assistant Custom Item
 
-This example implements a [custom item](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item) based on the [`dxChat`](https://js.devexpress.com/jQuery/Documentation/Guide/UI_Components/Chat/Overview/) component. The 
+This example implements a [custom item](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item) based on the [`dxChat`](https://js.devexpress.com/jQuery/Documentation/Guide/UI_Components/Chat/Overview/) component. T
 
 For instructions on how to implement a custom dashboard items, refer to tutorials in the following section: [Create a Custom Item for the Web Dashboard](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item).
 
@@ -96,9 +96,9 @@ Files to Review:
 - [Index.cshtml](./CS/Pages/Index.cshtml)
 - [aiChatCustomItem.js](./CS/wwwroot/js/aiChatCustomItem.js)
 
-### Register the Custom Item
+### Register the Custom Item Extension
 
-Register the created custom item extension in the Wen Dashboard:
+Register the created custom item extension in the Web Dashboard:
 
 ```html
 <script type="text/javascript">
