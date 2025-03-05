@@ -1,22 +1,17 @@
 using Azure;
 using Azure.AI.OpenAI;
+using DashboardAIAssistant.Services;
 using DevExpress.AIIntegration;
 using DevExpress.AspNetCore;
 using DevExpress.DashboardAspNetCore;
 using DevExpress.DashboardCommon;
 using DevExpress.DashboardWeb;
 using DevExpress.DataAccess.Excel;
-using DevExpress.DataAccess.Sql;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Hosting.Internal;
-using DashboardAIAssistant;
-using DashboardAIAssistant.Services;
-using System;
-using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services
