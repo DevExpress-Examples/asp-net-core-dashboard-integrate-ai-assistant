@@ -84,9 +84,9 @@ Files to Review:
 
 ### Create a AI Assistant Custom Item
 
-This example implements a [custom item](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item) based on the [`dxChat`](https://js.devexpress.com/jQuery/Documentation/Guide/UI_Components/Chat/Overview/) component. T
+This example implements a [custom item](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item) based on the [`dxChat`](https://js.devexpress.com/jQuery/Documentation/Guide/UI_Components/Chat/Overview/) component.
 
-For instructions on how to implement a custom dashboard items, refer to tutorials in the following section: [Create a Custom Item for the Web Dashboard](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item).
+For instructions on how to implement custom dashboard items, refer to tutorials in the following section: [Create a Custom Item for the Web Dashboard](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item).
 
 For the **AI Assistant** custom item implementation, review to the following file: [aiChatCustomItem.js](./CS/wwwroot/js/aiChatCustomItem.js)
 
