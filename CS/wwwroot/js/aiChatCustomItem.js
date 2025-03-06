@@ -204,8 +204,8 @@ let AIChatCustomItem = (function() {
             this.component.option('alerts', []);
             instance.renderMessage(e.message);
             instance.option({ typingUsers: [assistant] });
-            const userInput = e.message.text + ((this.model.selectedSheet && "\nDiscuss sheet " + this.model.selectedSheet)
-                || "\nLet's discuss all sheets");
+            const userInput = e.message.text + ((this.model.selectedSheet && "\nDiscuss item " + this.model.selectedSheet)
+                || "\nLet's discuss all items");
             const response = await this.getAIResponse(userInput);
             this.renderAssistantMessage(instance, response);
         }

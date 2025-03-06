@@ -4,12 +4,17 @@ body {
 }
 
 div.dx-dashboard-item.dx-chat {
+    user-select: text !important;
     display: flex;
 }
 
 .dx-chat-messagelist-content .dx-chat-messagegroup-alignment-start,
 .dx-chat-messagelist-content .dx-chat-last-messagegroup-alignment-start {
     column-gap: 0;
+}
+
+.dx-chat-messagebubble-content {
+    user-select: text;
 }
 
 .dx-chat-messagebubble-content li > ul {

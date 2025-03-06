@@ -78,9 +78,13 @@ public interface IAIAssistantProvider {
 }
 ```
 
+You can review and tailor AI assistant instructions in the following file: [AssistantHelper.cs](./CS/Services/AssistantHelper.cs)
+
 Files to Review: 
 - [AIAssistantProvider.cs](./CS/Services/AIAssistantProvider.cs)
 - [IAIAssistantProvider.cs](./CS/IAIAssistantProvider.cs)
+- [AssistantHelper.cs](./CS/Services/AssistantHelper.cs)
+
 
 ### Create a AI Assistant Custom Item
 
@@ -172,8 +176,8 @@ async onMessageEntered(e) {
     this.component.option('alerts', []);
     instance.renderMessage(e.message);
     instance.option({ typingUsers: [assistant] });
-    const userInput = e.message.text + ((this.model.selectedSheet && "\nDiscuss sheet " + this.model.selectedSheet)
-        || "\nLet's discuss all sheets");
+    const userInput = e.message.text + ((this.model.selectedSheet && "\nDiscuss item " + this.model.selectedSheet)
+        || "\nLet's discuss all items");
     const response = await this.getAIResponse(userInput);
     this.renderAssistantMessage(instance, response);
 }
@@ -188,7 +192,9 @@ async onMessageEntered(e) {
 - [aiChatCustomItem.js](./CS/wwwroot/js/aiChatCustomItem.js)
 - [AIAssistantProvider.cs](./CS/Services/AIAssistantProvider.cs)
 - [IAIAssistantProvider.cs](./CS/IAIAssistantProvider.cs)
-- [AIChatController](./CS/Controllers/AIChatController.cs)
+- [AIChatController.cs](./CS/Controllers/AIChatController.cs)
+- [AssistantHelper.cs](./CS/Services/AssistantHelper.cs)
+
 
 ## Documentation
 
