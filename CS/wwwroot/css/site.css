@@ -4,7 +4,6 @@ body {
 }
 
 div.dx-dashboard-item.dx-chat {
-    user-select: text !important;
     display: flex;
 }
 
