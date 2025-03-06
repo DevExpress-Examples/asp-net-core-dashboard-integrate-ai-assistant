@@ -86,7 +86,7 @@ Files to Review:
 - [AssistantHelper.cs](./CS/Services/AssistantHelper.cs)
 
 
-### Create a AI Assistant Custom Item
+### Create an AI Assistant Custom Item
 
 This example implements a [custom item](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item) based on the [`dxChat`](https://js.devexpress.com/jQuery/Documentation/Guide/UI_Components/Chat/Overview/) component.
 
@@ -135,7 +135,7 @@ File to Review:
 
 ### Access the Assistant
 
-Each time a dashboard is initialized or its [dashboard state](https://docs.devexpress.com/Dashboard/DevExpress.DashboardCommon.DashboardState) changes, a new assistant is created and the dashboard data is exported in Excel format. This way the AI Assistant is always provided with up-to-date data.
+Each time a dashboard is initialized or its [dashboard state](https://docs.devexpress.com/Dashboard/DevExpress.DashboardCommon.DashboardState) changes, the dashboard data is exported in Excel format and a new assistant is created. This way the AI Assistant is always provided with up-to-date data.
 
 Files to Review: 
 
