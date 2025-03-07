@@ -94,7 +94,7 @@ For instructions on how to implement custom dashboard items, refer to tutorials 
 
 For the **AI Assistant** custom item implementation, review to the following file: [aiChatCustomItem.js](./CS/wwwroot/js/aiChatCustomItem.js)
 
-The additional logic for the custom item is implemented in the [Index.cshtml](./CS/Pages/Index.cshtml) file. The `itemCaptionToolbarUpdated` event is used to add a **Select Widget** button to the item's caption. This button allows users to select a dashboard item for the AI Assistant. The `DashboardInitialized` event is handled to implement the *one AI Assistant per dashboard* logic.
+The additional logic for the custom item is implemented in the [Index.cshtml](./CS/Pages/Index.cshtml) file. The `itemCaptionToolbarUpdated` event is used to add a **Select Widget** button to the item's caption. This button allows users to select a dashboard item and thus narrow down data available to the AI Assistant. The `DashboardInitialized` event handler implements the *one AI Assistant per dashboard* logic.
 
 Files to Review:
 - [Index.cshtml](./CS/Pages/Index.cshtml)
@@ -124,7 +124,7 @@ Register the created custom item extension in the Web Dashboard:
 </div>
 ```
 
-After you registered the extension the AI Assistant icon appears in the Dashboard Toolbox: 
+After you registered the extension, the AI Assistant icon appears in the Dashboard Toolbox: 
 
 ![DevExpress BI Dashboard - AI Assistant Custom Item Icon](images/dashboard-toolbar-ai-assistant-item.png)
 
@@ -135,7 +135,7 @@ File to Review:
 
 ### Access the Assistant
 
-Each time a dashboard is initialized or its [dashboard state](https://docs.devexpress.com/Dashboard/DevExpress.DashboardCommon.DashboardState) changes, the dashboard data is exported in Excel format and a new assistant is created. This way the AI Assistant is always provided with up-to-date data.
+Each time a dashboard is initialized or its [dashboard state](https://docs.devexpress.com/Dashboard/DevExpress.DashboardCommon.DashboardState) changes, the application exports dashboard data to an Excel spreadsheet and creates a new assistant. This way, the AI Assistant always processes up-to-date data.
 
 Files to Review: 
 
