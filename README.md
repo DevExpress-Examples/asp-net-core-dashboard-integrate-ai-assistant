@@ -22,7 +22,7 @@ The AI Assistant reviews and analyzes all the data displayed in the dashboard to
 
 Create an Azure OpenAI resource in the Azure portal to use AI Assistants for DevExpress BI Dashboard. Refer to the following help topic for details: [Microsoft - Create and deploy an Azure OpenAI Service resource](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/create-resource?pivots=web-portal).
 
-Once you obtain a private endpoint and an API key, register them as `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_APIKEY` environment variables. The [EnvSettings.cs](./CS/EnvSettings.cs) reads these settings. `DeploymentName` in this file is a name of your Azure model, for example, `GPT4o`:
+Once you obtain a private endpoint and an API key, register them as `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_APIKEY` environment variables. Open [EnvSettings.cs](./CS/EnvSettings.cs) to review code that reads these settings. `DeploymentName` in this file is a name of your Azure model, for example, `GPT4o`:
 
 ```cs
 public static class EnvSettings {
