@@ -71,10 +71,9 @@ On the server side, the `AIAssistantProvider` service manages assistants. An `IA
  
 ```cs 
 public interface IAIAssistantProvider {
-    IAIAssistant GetAssistant(string assistantName);
-    Task<string> CreateAssistant(AssistantType assistantType, Stream data);
-    Task<string> CreateAssistant(AssistantType assistantType);
-    void DisposeAssistant(string assistantName);
+    Task<string> CreateAssistant(Stream fileContent, string prompt);
+    IAIAssistant GetAssistant(string assistantId);
+    void DisposeAssistant(string assistantId);
 }
 ```
 
@@ -82,7 +81,7 @@ You can review and tailor AI assistant instructions in the following file: [Assi
 
 Files to Review: 
 - [AIAssistantProvider.cs](./CS/Services/AIAssistantProvider.cs)
-- [IAIAssistantProvider.cs](./CS/IAIAssistantProvider.cs)
+- [IAIAssistantProvider.cs](./CS/Services/IAIAssistantProvider.cs)
 - [AssistantHelper.cs](./CS/Services/AssistantHelper.cs)
 
 
@@ -110,7 +109,7 @@ Register the created custom item extension in the Web Dashboard:
     function handleBeforeRender(dashboardControl) {
         chatAIItem = new AIChatItem(dashboardControl);
         dashboardControl.registerExtension(chatAIItem);
-            // ...
+        // ...
     }
     // ...
 </script>
@@ -191,7 +190,7 @@ async onMessageEntered(e) {
 - [Index.cshtml](./CS/Pages/Index.cshtml)
 - [aiChatCustomItem.js](./CS/wwwroot/js/aiChatCustomItem.js)
 - [AIAssistantProvider.cs](./CS/Services/AIAssistantProvider.cs)
-- [IAIAssistantProvider.cs](./CS/IAIAssistantProvider.cs)
+- [IAIAssistantProvider.cs](./CS/Services/IAIAssistantProvider.cs)
 - [AIChatController.cs](./CS/Controllers/AIChatController.cs)
 - [AssistantHelper.cs](./CS/Services/AssistantHelper.cs)
 
