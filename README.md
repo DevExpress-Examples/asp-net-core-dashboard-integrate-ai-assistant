@@ -5,11 +5,11 @@
 <!-- default badges end -->
 # Dashboard for ASP.NET Core — Integrate AI Assistant based on Azure OpenAI
 
-This example is an ASP.NET Core application with integrated DevExpress BI Dashboard and an AI assistant. User requests and assistant responses are displayed on-screen using the DevExtreme [`dxChat`](https://js.devexpress.com/jQuery/Documentation/24_2/ApiReference/UI_Components/dxChat/) component. The AI Assistant is implemented as a [custom dashboard item](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item) based on the `dxChat` widget.
+This is an example of an ASP.NET Core application with an integrated DevExpress BI Dashboard and an AI assistant. User requests and assistant responses are displayed on-screen using the DevExtreme [`dxChat`](https://js.devexpress.com/jQuery/Documentation/24_2/ApiReference/UI_Components/dxChat/) component. The AI Assistant is implemented as a [custom dashboard item](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item) based on the `dxChat` widget.
 
 ![DevExpress BI Dashboard - Integrate an AI Assistant](images/dashboard-ai-assistant.png)
 
-The AI Assistant reviews and analyzes all data displayed in the dashboard to answer your questions. You can narrow down available data if you select a specific dashboard item. Click the **Select widget** button in the AI Assistant custom item's caption and choose the desired widget. Note that updates to parameters or master filters, or any other data changes automatically trigger the AI Assistant recreation. 
+The AI Assistant reviews and analyzes all data displayed in the dashboard to answer your questions. You can filter the available data if you select a specific dashboard item. Click the **Select widget** button in the AI Assistant custom item's caption and choose the desired widget. Note that updates to parameters or master filters or any other data changes automatically trigger the AI Assistant recreation. 
 
 **Please note that AI Assistant initialization takes time. The assistant is ready for interaction once Microsoft Azure scans the source document on the server side.**
 
@@ -22,7 +22,7 @@ The AI Assistant reviews and analyzes all data displayed in the dashboard to ans
 
 Create an Azure OpenAI resource in the Azure portal to use AI Assistants for DevExpress BI Dashboard. Refer to the following help topic for details: [Microsoft - Create and deploy an Azure OpenAI Service resource](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/create-resource?pivots=web-portal).
 
-Once you obtain a private endpoint and an API key, register them as `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_APIKEY` environment variables. Open [EnvSettings.cs](./CS/EnvSettings.cs) to review code that reads these settings. `DeploymentName` in this file is a name of your Azure model, for example, `GPT4o`:
+Once you obtain a private endpoint and API key, register them as `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_APIKEY` environment variables. Open [EnvSettings.cs](./CS/EnvSettings.cs) to review the code that reads these settings. `DeploymentName` in this file is a name of your Azure model, for example, `GPT4o`:
 
 ```cs
 public static class EnvSettings {
@@ -37,7 +37,7 @@ Files to Review:
 
 ### Register AI Services
 
-Register AI services in your application. Add the following code to the _Program.cs_ file:
+Add the following code to the _Program.cs_ file to register AI services in your application:
 
 ```cs
 using DevExpress.AIIntegration;
@@ -123,7 +123,7 @@ Register the created custom item extension in the Web Dashboard:
 </div>
 ```
 
-After you registered the extension, the AI Assistant icon appears in the Dashboard Toolbox: 
+After you register the extension, the AI Assistant icon appears in the Dashboard Toolbox: 
 
 ![DevExpress BI Dashboard - AI Assistant Custom Item Icon](images/dashboard-toolbar-ai-assistant-item.png)
 
