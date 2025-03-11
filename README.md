@@ -9,7 +9,7 @@ This example is an ASP.NET Core application with integrated DevExpress BI Dashbo
 
 ![DevExpress BI Dashboard - Integrate an AI Assistant](images/dashboard-ai-assistant.png)
 
-The AI Assistant reviews and analyzes all the data displayed in the dashboard to answer your questions. For a more focused analysis, you can select a specific dashboard item. Click the **Select widget** button in the AI Assistant custom item's caption and choose the desired widget. Any changes to dashboard data—such as updates to parameters or master filters—will automatically trigger a recreation of the AI Assistant. The dashboard data is exported in Excel format and passed to the AI Assistant.
+The AI Assistant reviews and analyzes all data displayed in the dashboard to answer your questions. You can narrow down available data if you select a specific dashboard item. Click the **Select widget** button in the AI Assistant custom item's caption and choose the desired widget. Note that updates to parameters or master filters, or any other data changes automatically trigger the AI Assistant recreation. 
 
 **Please note that AI Assistant initialization takes time. The assistant is ready for interaction once Microsoft Azure scans the source document on the server side.**
 
