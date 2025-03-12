@@ -1,5 +1,6 @@
 using Azure;
 using Azure.AI.OpenAI;
+using DashboardAIAssistant;
 using DashboardAIAssistant.Services;
 using DevExpress.AIIntegration;
 using DevExpress.AspNetCore;
