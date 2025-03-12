@@ -1,7 +1,7 @@
 ﻿DevExpress.localization.loadMessages({
     en: {
         'dxChat-emptyListMessage': 'Chat is Empty',
-        'dxChat-emptyListPrompt': 'AI Data Analysis Assistant is ready to answer your questions.',
+        'dxChat-emptyListPrompt': 'AI Assistant is ready to answer your questions.',
         'dxChat-textareaPlaceholder': 'Ask AI Assistant...',
     },
 })
@@ -22,7 +22,7 @@ let AIChatCustomItem = (function() {
     const aiChatMetadata = {
         bindings: [],
         icon: AI_CHAT_CUSTOM_ITEM,
-        title: 'AI-powered Analytics Assistant',
+        title: 'AI Assistant',
         index: 1
     };
 
@@ -142,7 +142,7 @@ let AIChatCustomItem = (function() {
                 return await this.getAnswer(this.chatId, question);
         };
 
-        normilizeAIResponse(text) {
+        normalizeAIResponse(text) {
             text = text.replace(/【\d+:\d+†[^\】]+】/g, "");
             let html = marked.parse(text);
             if (/<p>\.\s*<\/p>\s*$/.test(html))
@@ -175,11 +175,11 @@ let AIChatCustomItem = (function() {
                 return message.text;
 
             const textElement = document.createElement('div');
-            textElement.innerHTML = this.normilizeAIResponse(message.text);
+            textElement.innerHTML = this.normalizeAIResponse(message.text);
             container.appendChild(textElement);
 
             const buttonContainer = document.createElement('div');
-            buttonContainer.classList.add('dx-bubble-button-containder');
+            buttonContainer.classList.add('dx-bubble-button-container');
             this.lastRefreshButton?.remove();
             const copyBtnElement = document.createElement('div');
             new DevExpress.ui.dxButton(copyBtnElement, {
@@ -204,8 +204,8 @@ let AIChatCustomItem = (function() {
             this.component.option('alerts', []);
             instance.renderMessage(e.message);
             instance.option({ typingUsers: [assistant] });
-            const userInput = e.message.text + ((this.model.selectedSheet && "\nDiscuss sheet " + this.model.selectedSheet)
-                || "\nLet's discuss all sheet");
+            const userInput = e.message.text + ((this.model.selectedSheet && "\nDiscuss item " + this.model.selectedSheet)
+                || "\nLet's discuss all items");
             const response = await this.getAIResponse(userInput);
             this.renderAssistantMessage(instance, response);
         }
@@ -221,7 +221,7 @@ let AIChatCustomItem = (function() {
                 showAvatar: false,
                 showMessageTimestamp: false,
                 showUserName: false,
-                title: "AI-powered Analytics Assistant",
+                title: "AI Assistant",
                 disabled: this.dashboardControl.isDesignMode(),
                 user
             });

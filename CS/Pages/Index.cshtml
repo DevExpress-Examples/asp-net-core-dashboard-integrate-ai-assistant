@@ -1,4 +1,5 @@
 @page
+@using DevExpress.DashboardWeb
 <script type="text/javascript">
     const ALL_WIDGETS = 'All widgets';
     const dashboardItems = [];
@@ -14,7 +15,7 @@
             e.options.actionItems.unshift({
                 hint: 'Select widget',
                 type: 'menu',
-                icon: 'dx-dashboard-toggle-multiselection',
+                icon: 'dx-dashboard-content-selection',
                 menu: {
                     items: dashboardItems,
                     selectionMode: 'none',
@@ -78,6 +79,7 @@
 <div style="position: relative; height: calc(100vh - 55px);">
 @(Html.DevExpress().Dashboard("dashboardControl1")
     .ControllerName("DefaultDashboard")
+    .WorkingMode(WorkingMode.Viewer)
     .Width("100%")
     .Height("100%")
     .OnBeforeRender("handleBeforeRender")

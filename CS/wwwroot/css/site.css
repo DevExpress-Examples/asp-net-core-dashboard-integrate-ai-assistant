@@ -12,6 +12,10 @@ div.dx-dashboard-item.dx-chat {
     column-gap: 0;
 }
 
+.dx-chat-messagebubble-content {
+    user-select: text;
+}
+
 .dx-chat-messagebubble-content li > ul {
     margin-bottom: 0;
 }
