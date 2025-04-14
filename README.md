@@ -202,7 +202,6 @@ async onMessageEntered(e) {
 - [AIChatController.cs](./CS/Controllers/AIChatController.cs)
 - [AssistantHelper.cs](./CS/Services/AssistantHelper.cs)
 
-
 ## Documentation
 
 - [AI Integration](https://docs.devexpress.com/CoreLibraries/405204/ai-powered-extensions)
@@ -211,7 +210,6 @@ async onMessageEntered(e) {
 
 ## More Examples
 
-- [DevExtreme Chat - Getting Started](https://github.com/DevExpress-Examples/devextreme-getting-started-with-chat)
 - [Reporting for ASP.NET Core - Integrate AI Assistant based on Azure OpenAI](https://github.com/DevExpress-Examples/web-reporting-integrate-ai-assistant)
 
 <!-- feedback -->
