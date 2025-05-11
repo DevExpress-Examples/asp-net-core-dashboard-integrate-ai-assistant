@@ -13,7 +13,7 @@
 	<Exec Command="npm install" />
   </Target>
   <ItemGroup>
-    <PackageReference Include="DevExpress.AspNetCore.Dashboard" Version="24.2." />
+    <PackageReference Include="DevExpress.AspNetCore.Dashboard" Version="24.2.6" />
     <PackageReference Include="DevExpress.Drawing.Skia" Version="24.2.6" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119.0" />
     <PackageReference Include="BuildBundlerMinifier" Version="3.0.415" />
