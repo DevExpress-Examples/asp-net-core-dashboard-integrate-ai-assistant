@@ -180,7 +180,6 @@ let AIChatCustomItem = (function() {
 
             const buttonContainer = document.createElement('div');
             buttonContainer.classList.add('dx-bubble-button-container');
-            this.lastRefreshButton?.remove();
             const copyBtnElement = document.createElement('div');
             new DevExpress.ui.dxButton(copyBtnElement, {
                 icon: 'copy',
@@ -194,12 +193,15 @@ let AIChatCustomItem = (function() {
                 stylingMode: 'text',
                 onClick: () => this.refreshAnswer(data.component)
             });
-            buttonContainer.appendChild(refreshBtnElement);
-            this.lastRefreshButton = refreshBtnElement;
+            if(data.component.option('items').at(-1).author === assistant.name) {
+                buttonContainer.appendChild(refreshBtnElement);
+                this.lastRefreshButton = refreshBtnElement;
+            }
             container.appendChild(buttonContainer);
         }
 
         async onMessageEntered(e) {
+            this.lastRefreshButton?.remove();
             const instance = e.component;
             this.component.option('alerts', []);
             instance.renderMessage(e.message);

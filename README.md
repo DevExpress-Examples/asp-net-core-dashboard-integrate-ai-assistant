@@ -1,5 +1,5 @@
 <!-- default badges list -->
-![](https://img.shields.io/endpoint?url=https://codecentral.devexpress.com/api/v1/VersionRange/938296554/24.2.3%2B)
+![](https://img.shields.io/endpoint?url=https://codecentral.devexpress.com/api/v1/VersionRange/938296554/24.2.6%2B)
 [![](https://img.shields.io/badge/Open_in_DevExpress_Support_Center-FF7200?style=flat-square&logo=DevExpress&logoColor=white)](https://supportcenter.devexpress.com/ticket/details/T1279614)
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 [![](https://img.shields.io/badge/💬_Leave_Feedback-feecdd?style=flat-square)](#does-this-example-address-your-development-requirementsobjectives)
@@ -198,7 +198,6 @@ async onMessageEntered(e) {
 - [AIChatController.cs](./CS/Controllers/AIChatController.cs)
 - [AssistantHelper.cs](./CS/Services/AssistantHelper.cs)
 
-
 ## Documentation
 
 - [AI Integration](https://docs.devexpress.com/CoreLibraries/405204/ai-powered-extensions)
@@ -207,7 +206,6 @@ async onMessageEntered(e) {
 
 ## More Examples
 
-- [DevExtreme Chat - Getting Started](https://github.com/DevExpress-Examples/devextreme-getting-started-with-chat)
 - [Reporting for ASP.NET Core - Integrate AI Assistant based on Azure OpenAI](https://github.com/DevExpress-Examples/web-reporting-integrate-ai-assistant)
 
 <!-- feedback -->
