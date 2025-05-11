@@ -15,7 +15,7 @@ The AI Assistant reviews and analyzes all data displayed in the dashboard to ans
 **Please note that AI Assistant initialization takes time. The assistant is ready for interaction once Microsoft Azure scans the source document on the server side.**
 
 > [!Important]
-> We use version **9.4.0-preview.1.25207.5** of the _Microsoft.Extensions.AI.*_ libraries in our source code. We do not guarantee compatibility or correct operation with higher versions. 
+> We use version **9.4.3-preview.1.25230.7** of the _Microsoft.Extensions.AI.*_ libraries in our source code. We do not guarantee compatibility or correct operation with higher versions. 
 
 ## Implementation Details
 
