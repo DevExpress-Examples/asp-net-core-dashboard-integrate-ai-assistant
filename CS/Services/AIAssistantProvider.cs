@@ -1,53 +1,52 @@
-﻿using DevExpress.AIIntegration.OpenAI.Services;
-using DevExpress.AIIntegration.Services.Assistant;
-using DevExpress.Utils;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Threading.Tasks;
+using DevExpress.AIIntegration.Services.Assistant;
+using DevExpress.Utils;
 
 namespace DashboardAIAssistant.Services {
     public class AIAssistantProvider : IAIAssistantProvider {
         private readonly IAIAssistantFactory assistantFactory;
+        private readonly AIAssistantCreator assistantCreator;
         private ConcurrentDictionary<string, IAIAssistant> Assistants { get; set; } = new();
 
-        public AIAssistantProvider(IAIAssistantFactory assistantFactory) {
+        public AIAssistantProvider(IAIAssistantFactory assistantFactory, AIAssistantCreator assistantCreator) {
             this.assistantFactory = assistantFactory;
+            this.assistantCreator = assistantCreator;
         }
 
         public async Task<string> CreateAssistant(Stream fileContent, string prompt) {
             Guard.ArgumentNotNull(fileContent, nameof(fileContent));
             Guard.ArgumentIsNotNullOrEmpty(prompt, nameof(prompt));
-            
-            string assistantId = Guid.NewGuid().ToString();
 
-            IAIAssistant assistant = await assistantFactory.CreateAssistant(assistantId);
-            Assistants.TryAdd(assistantId, assistant);
+            string assistantName = Guid.NewGuid().ToString();
+            (string assistantId, string threadId) = await assistantCreator.CreateAssistantAsync(fileContent, $"{assistantName}.xlsx", prompt, false);
 
-            await assistant.InitializeAsync(new OpenAIAssistantOptions($"{assistantId}.xlsx", fileContent) {
-                Instructions = prompt,
-                UseFileSearchTool = false,
-            });
+            IAIAssistant assistant = await assistantFactory.GetAssistant(assistantId, threadId);
+            await assistant.InitializeAsync();
 
-            return assistantId;
+            Assistants.TryAdd(assistantName, assistant);
+
+            return assistantName;
         }
 
-        public IAIAssistant GetAssistant(string assistantId) {
-            Guard.ArgumentIsNotNullOrEmpty(assistantId, nameof(assistantId));
+        public IAIAssistant GetAssistant(string assistantName) {
+            Guard.ArgumentIsNotNullOrEmpty(assistantName, nameof(assistantName));
 
             IAIAssistant assistant = null;
 
-            if(!Assistants.TryGetValue(assistantId, out assistant)) {
-                throw new ArgumentException($"Incorrect assistant id: {assistantId}");
+            if(!Assistants.TryGetValue(assistantName, out assistant)) {
+                throw new ArgumentException($"Incorrect assistant id: {assistantName}");
             }
 
             return assistant;
         }
 
-        public void DisposeAssistant(string assistantId) {
-            Guard.ArgumentIsNotNullOrEmpty(assistantId, nameof(assistantId));
+        public void DisposeAssistant(string assistantName) {
+            Guard.ArgumentIsNotNullOrEmpty(assistantName, nameof(assistantName));
 
-            if(Assistants.TryRemove(assistantId, out IAIAssistant assistant)) {
+            if(Assistants.TryRemove(assistantName, out IAIAssistant assistant)) {
                 assistant.Dispose();
             }
         }

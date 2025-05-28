@@ -51,7 +51,10 @@ var azureOpenAIClient = new AzureOpenAIClient(
     new AzureKeyCredential(EnvSettings.AzureOpenAIKey));
 var chatClient = azureOpenAIClient.GetChatClient(EnvSettings.DeploymentName).AsIChatClient();
 
+var assistantCreator = new AIAssistantCreator(azureOpenAIClient, EnvSettings.DeploymentName); 
+
 builder.Services.AddSingleton(chatClient);
+builder.Services.AddSingleton(assistantCreator);
 builder.Services.AddSingleton<IAIAssistantProvider, AIAssistantProvider>();
 builder.Services.AddDevExpressAI(config =>
 {
