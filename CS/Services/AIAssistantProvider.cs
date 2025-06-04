@@ -21,7 +21,7 @@ namespace DashboardAIAssistant.Services {
             Guard.ArgumentIsNotNullOrEmpty(prompt, nameof(prompt));
 
             string assistantName = Guid.NewGuid().ToString();
-            (string assistantId, string threadId) = await assistantCreator.CreateAssistantAsync(fileContent, $"{assistantName}.xlsx", prompt, false);
+            (string assistantId, string threadId) = await assistantCreator.CreateAssistantAndThreadAsync(fileContent, $"{assistantName}.xlsx", prompt);
 
             IAIAssistant assistant = await assistantFactory.GetAssistant(assistantId, threadId);
             await assistant.InitializeAsync();
