@@ -93,7 +93,7 @@ For information on OpenAI Assistants, refer to the following documents:
 - [Azure OpenAI: OpenAI Assistants client library for .NET](https://learn.microsoft.com/en-us/dotnet/api/overview/azure/ai.openai.assistants-readme?view=azure-dotnet-preview)
 - [OpenAI .NET API library](https://github.com/openai/openai-dotnet)
 
-You can review and tailor AI assistant instructions in the following file: [AssistantHelper.cs](./CS/Services/AssistantHelper.cs)
+You can review and tailor AI assistant instructions in the following file: [AssistantHelper.cs](./CS/Services/AssistantHelper.cs).
 
 Files to Review: 
 - [IAIAssistantProvider.cs](./CS/Services/IAIAssistantProvider.cs)
