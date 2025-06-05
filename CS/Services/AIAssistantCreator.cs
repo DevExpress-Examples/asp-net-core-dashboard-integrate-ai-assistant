@@ -20,28 +20,24 @@ namespace DashboardAIAssistant.Services {
             this.deployment = deployment;
         }
 
-        public async Task<(string assistantId, string threadId)> CreateAssistantAsync(Stream data, string fileName, string instructions, bool useFileSearchTool = true, CancellationToken ct = default) {
+        public async Task<(string assistantId, string threadId)> CreateAssistantAndThreadAsync(Stream data, string fileName, string instructions, CancellationToken ct = default) {
             data.Position = 0;
 
             ClientResult<OpenAIFile> fileResponse = await fileClient.UploadFileAsync(data, fileName, FileUploadPurpose.Assistants, ct);
             OpenAIFile file = fileResponse.Value;
 
             var resources = new ToolResources() {
-                CodeInterpreter = new CodeInterpreterToolResources(),
-                FileSearch = useFileSearchTool ? new FileSearchToolResources() : null
+                CodeInterpreter = new CodeInterpreterToolResources()
             };
-            resources.FileSearch?.NewVectorStores.Add(new VectorStoreCreationHelper([file.Id]));
             resources.CodeInterpreter.FileIds.Add(file.Id);
 
             AssistantCreationOptions assistantCreationOptions = new AssistantCreationOptions() {
                 Name = Guid.NewGuid().ToString(),
                 Instructions = instructions,
-                ToolResources = resources
+                ToolResources = resources,
+                Tools = { new CodeInterpreterToolDefinition() }
             };
-            assistantCreationOptions.Tools.Add(new CodeInterpreterToolDefinition());
-            if (useFileSearchTool) {
-                assistantCreationOptions.Tools.Add(new FileSearchToolDefinition());
-            }
+            
 
             ClientResult<Assistant> assistantResponse = await assistantClient.CreateAssistantAsync(deployment, assistantCreationOptions, ct);
             ClientResult<AssistantThread> threadResponse = await assistantClient.CreateThreadAsync(cancellationToken: ct);

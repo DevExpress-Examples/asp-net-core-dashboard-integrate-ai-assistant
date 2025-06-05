@@ -1,5 +1,4 @@
 <!-- default badges list -->
-![](https://img.shields.io/endpoint?url=https://codecentral.devexpress.com/api/v1/VersionRange/938296554/25.1.2%2B)
 [![](https://img.shields.io/badge/Open_in_DevExpress_Support_Center-FF7200?style=flat-square&logo=DevExpress&logoColor=white)](https://supportcenter.devexpress.com/ticket/details/T1279614)
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 [![](https://img.shields.io/badge/💬_Leave_Feedback-feecdd?style=flat-square)](#does-this-example-address-your-development-requirementsobjectives)
@@ -14,8 +13,14 @@ The AI Assistant reviews and analyzes all data displayed in the dashboard to ans
 
 **Please note that AI Assistant initialization takes time. The assistant is ready for interaction once Microsoft Azure scans the source document on the server side.**
 
-> [!Important]
-> We use version **9.4.3-preview.1.25230.7** of the _Microsoft.Extensions.AI.*_ libraries in our source code. We do not guarantee compatibility or correct operation with higher versions. 
+> [!Note]
+> We use the following versions of the `Microsoft.Extensions.AI.*` libraries in our source code:
+>
+> - Microsoft.Extensions.AI.Abstractions: **9.5.0**
+> - Microsoft.Extensions.AI: **9.5.0**
+> - Microsoft.Extensions.AI.OpenAI: **9.5.0-preview.1.25265.7**
+>
+> We do not guarantee compatibility or correct operation with higher versions.
 
 ## Implementation Details
 
@@ -81,13 +86,20 @@ public interface IAIAssistantProvider {
 }
 ```
 
-You can review and tailor AI assistant instructions in the following file: [AssistantHelper.cs](./CS/Services/AssistantHelper.cs)
+The `AIAssistantCreator.CreateAssistantAndThreadAsync` method uploads a file to OpenAI, configures tool resources, creates an assistant with specified instructions and tools, initializes a new thread, and returns the assistant and thread IDs. The generated assistant and thread IDs are then passed to the `IAIAssistantFactory.GetAssistant` method, which returns an `IAIAssistant` instance. The created instance is added to the application's assistant collection and is referenced by its unique name.
+
+For information on OpenAI Assistants, refer to the following documents: 
+- [OpenAI Assistants API overview](https://platform.openai.com/docs/assistants/overview)
+- [Azure OpenAI: OpenAI Assistants client library for .NET](https://learn.microsoft.com/en-us/dotnet/api/overview/azure/ai.openai.assistants-readme?view=azure-dotnet-preview)
+- [OpenAI .NET API library](https://github.com/openai/openai-dotnet)
+
+You can review and tailor AI assistant instructions in the following file: [AssistantHelper.cs](./CS/Services/AssistantHelper.cs).
 
 Files to Review: 
-- [AIAssistantProvider.cs](./CS/Services/AIAssistantProvider.cs)
 - [IAIAssistantProvider.cs](./CS/Services/IAIAssistantProvider.cs)
-- [AssistantHelper.cs](./CS/Services/AssistantHelper.cs)
-
+- [AIAssistantProvider.cs](./CS/Services/AIAssistantProvider.cs)
+- [AIAssistantProvider.cs](./CS/Services/AIAssistantProvider.cs)
+- [AIAssistantCreator.cs](./CS/Services/AIAssistantCreator.cs)
 
 ### Create an AI Assistant Custom Item
 
@@ -197,6 +209,7 @@ async onMessageEntered(e) {
 - [IAIAssistantProvider.cs](./CS/Services/IAIAssistantProvider.cs)
 - [AIChatController.cs](./CS/Controllers/AIChatController.cs)
 - [AssistantHelper.cs](./CS/Services/AssistantHelper.cs)
+- [AIAssistantCreator.cs](./CS/Services/AIAssistantCreator.cs)
 
 ## Documentation
 
