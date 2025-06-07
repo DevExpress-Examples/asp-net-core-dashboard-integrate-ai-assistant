@@ -4,15 +4,18 @@
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 [![](https://img.shields.io/badge/💬_Leave_Feedback-feecdd?style=flat-square)](#does-this-example-address-your-development-requirementsobjectives)
 <!-- default badges end -->
-# Dashboard for ASP.NET Core — Integrate AI Assistant based on Azure OpenAI
+# DevExpress BI Dashboard for ASP.NET Core — Azure OpenAI-based AI Assistant
 
-This is an example of an ASP.NET Core application with an integrated DevExpress BI Dashboard and an AI assistant. User requests and assistant responses are displayed on-screen using the DevExtreme [`dxChat`](https://js.devexpress.com/jQuery/Documentation/24_2/ApiReference/UI_Components/dxChat/) component. The AI Assistant is implemented as a [custom dashboard item](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item) based on the `dxChat` widget.
+Sample ASP.NET Core application using DevExpress BI Dashboard with an integrated AI Assistant.  
+
+User requests and AI assistant responses are displayed on-screen (within the DevExtreme [`dxChat`](https://js.devexpress.com/jQuery/Documentation/24_2/ApiReference/UI_Components/dxChat/) component). The AI Assistant is implemented as a [custom BI Dashboard item](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item) (based on the `dxChat` widget).
 
 ![DevExpress BI Dashboard - Integrate an AI Assistant](images/dashboard-ai-assistant.png)
 
-The AI Assistant reviews and analyzes all data displayed in the dashboard to answer your questions. You can filter the available data if you select a specific dashboard item. Click the **Select widget** button in the AI Assistant custom item's caption and choose the desired widget. Note that updates to parameters or master filters or any other data changes automatically trigger the AI Assistant recreation. 
 
-**Please note that AI Assistant initialization takes time. The assistant is ready for interaction once Microsoft Azure scans the source document on the server side.**
+To answer user questions, the AI Assistant reviews/analyzes all data displayed within the DevExpress BI Dashboard. You can filter available data if you select a specific Dashboard item. Click the **Select widget** button in the AI Assistant custom item caption and select the desired widget. Note: updates to parameters/master filters or other data changes automatically trigger recreation of the AI Assistant. 
+
+**AI Assistant initialization takes time. The Assistant is ready for interaction once Microsoft Azure scans the source document (on the server side).** 
 
 > [!Note]
 > We use the following versions of the `Microsoft.Extensions.AI.*` libraries in our source code:
@@ -21,7 +24,7 @@ The AI Assistant reviews and analyzes all data displayed in the dashboard to ans
 > - Microsoft.Extensions.AI: **9.5.0**
 > - Microsoft.Extensions.AI.OpenAI: **9.5.0-preview.1.25265.7**
 >
-> We do not guarantee compatibility or correct operation with higher versions.
+> We cannot guarantee compatibility with other versions. 
 
 ## Implementation Details
 
@@ -30,9 +33,9 @@ The AI Assistant reviews and analyzes all data displayed in the dashboard to ans
 > [!NOTE]  
 > DevExpress AI-powered extensions follow the "bring your own key" principle. DevExpress does not offer a REST API and does not ship any built-in LLMs/SLMs. You need an active Azure/Open AI subscription to obtain the REST API endpoint, key, and model deployment name. These variables must be specified at application startup to register AI clients and enable DevExpress AI-powered Extensions in your application.
 
-Create an Azure OpenAI resource in the Azure portal to use AI Assistants for DevExpress BI Dashboard. Refer to the following help topic for details: [Microsoft - Create and deploy an Azure OpenAI Service resource](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/create-resource?pivots=web-portal).
+Create an Azure OpenAI resource in the Azure portal to use AI Assistants for DevExpress BI Dashboard. Refer to the following help topic for additional information in this regard: [Microsoft - Create and deploy an Azure OpenAI Service resource](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/create-resource?pivots=web-portal).
 
-Once you obtain a private endpoint and API key, register them as `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_APIKEY` environment variables. Open [EnvSettings.cs](./CS/EnvSettings.cs) to review the code that reads these settings. `DeploymentName` in this file is a name of your Azure model, for example, `GPT4o`:
+Once you obtain a private endpoint and API key, register them as `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_APIKEY` environment variables. Open [EnvSettings.cs](./CS/EnvSettings.cs) to review the code that reads these settings. `DeploymentName` in this file represents the name of your Azure model, for example, GPT4o: 
 
 ```cs
 public static class EnvSettings {
@@ -70,7 +73,7 @@ builder.Services.AddDevExpressAI(config =>
 ```
 
 >[!NOTE]
-> Availability of Azure Open AI Assistants depends on the region. Refer to the following article for more details: [Assistants (Preview)](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models?tabs=global-standard%2Cstandard-chat-completions#assistants-preview).
+> Availability of Azure Open AI Assistants depends on region. Refer to the following article for additional information: [Assistants (Preview)](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models?tabs=global-standard%2Cstandard-chat-completions#assistants-preview).
 
 Files to Review: 
 - [Program.cs](./CS/Program.cs)
@@ -106,11 +109,11 @@ Files to Review:
 
 This example implements a [custom item](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item) based on the [`dxChat`](https://js.devexpress.com/jQuery/Documentation/Guide/UI_Components/Chat/Overview/) component.
 
-For instructions on how to implement custom dashboard items, refer to tutorials in the following section: [Create a Custom Item for the Web Dashboard](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item).
+For instructions on how to implement custom BI Dashboard items, refer to the following tutorials: Create a Custom Item for the Web Dashboard](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item).
 
-For the **AI Assistant** custom item implementation, review to the following file: [aiChatCustomItem.js](./CS/wwwroot/js/aiChatCustomItem.js)
+For our **AI Assistant** custom item implementation, review the following file: [aiChatCustomItem.js](./CS/wwwroot/js/aiChatCustomItem.js).
 
-The additional logic for the custom item is implemented in the [Index.cshtml](./CS/Pages/Index.cshtml) file. The `itemCaptionToolbarUpdated` event is used to add a **Select Widget** button to the item's caption. This button allows users to select a dashboard item and thus narrow down data available to the AI Assistant. The `DashboardInitialized` event handler implements the *one AI Assistant per dashboard* logic.
+Additional logic for the custom item is implemented in the [Index.cshtml](./CS/Pages/Index.cshtml) file. The `itemCaptionToolbarUpdated` event is used to add a **Select Widget** button to the item's caption. This button allows users to select a BI Dashboard item and narrow data available to the AI Assistant. The `DashboardInitialized` event handler implements _one AI Assistant per dashboard_ logic.
 
 Files to Review:
 - [Index.cshtml](./CS/Pages/Index.cshtml)
@@ -118,7 +121,7 @@ Files to Review:
 
 ### Register the Custom Item Extension
 
-Register the created custom item extension in the Web Dashboard:
+Register the custom item extension in the Web Dashboard:
 
 ```html
 <script type="text/javascript">
@@ -140,18 +143,18 @@ Register the created custom item extension in the Web Dashboard:
 </div>
 ```
 
-After you register the extension, the AI Assistant icon appears in the Dashboard Toolbox: 
+Once you register the extension, an AI Assistant icon will appear within the Dashboard Toolbox:
 
 ![DevExpress BI Dashboard - AI Assistant Custom Item Icon](images/dashboard-toolbar-ai-assistant-item.png)
 
-Click the item to add an AI Assistant item to the dashboard. Only one AI Assistant item is available per dashboard. You can ask the assistant questions in the Viewer mode.
+Click the item to add an AI Assistant item to the dashboard. Only one AI Assistant item is available per BI Dashboard. You can ask the assistant questions in Viewer mode.
 
 File to Review: 
 - [Index.cshtml](./CS/Pages/Index.cshtml)
 
 ### Access the Assistant
 
-Each time a dashboard is initialized or its [dashboard state](https://docs.devexpress.com/Dashboard/DevExpress.DashboardCommon.DashboardState) changes, the application exports dashboard data to an Excel spreadsheet and creates a new assistant. This way, the AI Assistant always processes up-to-date data.
+Each time a Dashboard is initialized or its [dashboard state](https://docs.devexpress.com/Dashboard/DevExpress.DashboardCommon.DashboardState) changes, the application exports Dashboard data to an Excel spreadsheet and creates a new Assistant (so that the AI Assistant always processes up-to-date data).
 
 Files to Review: 
 
@@ -159,7 +162,7 @@ Files to Review:
 - [AIAssistantProvider.cs](./CS/Services/AIAssistantProvider.cs)
 - [AIChatController](./CS/Controllers/AIChatController.cs)
 
-### Communicate with Assistant
+### Communicate with the Assistant
 
 Each time a user sends a message, the [`onMessageEntered`](https://js.devexpress.com/jQuery/Documentation/24_2/ApiReference/UI_Components/dxChat/Configuration/#onMessageEntered) event handler passes the request to the assistant:
 
