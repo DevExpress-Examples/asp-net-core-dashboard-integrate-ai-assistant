@@ -63,7 +63,7 @@ var azureOpenAIClient = new AzureOpenAIClient(
     new Uri(EnvSettings.AzureOpenAIEndpoint),
     new AzureKeyCredential(EnvSettings.AzureOpenAIKey));
 
-var chatClient = azureOpenAIClient.AsChatClient(EnvSettings.DeploymentName);
+var chatClient = azureOpenAIClient.GetChatClient(EnvSettings.DeploymentName).AsIChatClient();
 
 builder.Services.AddDevExpressAI(config =>
 {
