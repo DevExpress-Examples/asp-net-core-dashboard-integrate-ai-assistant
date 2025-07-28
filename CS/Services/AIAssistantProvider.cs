@@ -6,7 +6,7 @@ using DevExpress.AIIntegration.Services.Assistant;
 using DevExpress.Utils;
 
 namespace DashboardAIAssistant.Services {
-    public class AIAssistantProvider : IAIAssistantProvider {
+    public class AIAssistantProvider : IAIAssistantProvider, IDisposable {
         private readonly IAIAssistantFactory assistantFactory;
         private readonly AIAssistantCreator assistantCreator;
         private ConcurrentDictionary<string, IAIAssistant> Assistants { get; set; } = new();
@@ -20,35 +20,43 @@ namespace DashboardAIAssistant.Services {
             Guard.ArgumentNotNull(fileContent, nameof(fileContent));
             Guard.ArgumentIsNotNullOrEmpty(prompt, nameof(prompt));
 
-            string assistantName = Guid.NewGuid().ToString();
-            (string assistantId, string threadId) = await assistantCreator.CreateAssistantAndThreadAsync(fileContent, $"{assistantName}.xlsx", prompt);
+            string guid = Guid.NewGuid().ToString();
+            (string assistantId, string threadId) = await assistantCreator.CreateAssistantAndThreadAsync(fileContent, $"{guid}.xlsx", prompt);
 
             IAIAssistant assistant = await assistantFactory.GetAssistant(assistantId, threadId);
             await assistant.InitializeAsync();
 
-            Assistants.TryAdd(assistantName, assistant);
+            Assistants.TryAdd(assistantId, assistant);
 
-            return assistantName;
+            return assistantId;
         }
 
-        public IAIAssistant GetAssistant(string assistantName) {
-            Guard.ArgumentIsNotNullOrEmpty(assistantName, nameof(assistantName));
+        public IAIAssistant GetAssistant(string assistantId) {
+            Guard.ArgumentIsNotNullOrEmpty(assistantId, nameof(assistantId));
 
             IAIAssistant assistant = null;
 
-            if(!Assistants.TryGetValue(assistantName, out assistant)) {
-                throw new ArgumentException($"Incorrect assistant id: {assistantName}");
+            if(!Assistants.TryGetValue(assistantId, out assistant)) {
+                throw new ArgumentException($"Incorrect assistant id: {assistantId}");
             }
 
             return assistant;
         }
 
-        public void DisposeAssistant(string assistantName) {
-            Guard.ArgumentIsNotNullOrEmpty(assistantName, nameof(assistantName));
+        public async Task DisposeAssistant(string assistantId) {
+            Guard.ArgumentIsNotNullOrEmpty(assistantId, nameof(assistantId));
 
-            if(Assistants.TryRemove(assistantName, out IAIAssistant assistant)) {
+            if(Assistants.TryRemove(assistantId, out IAIAssistant assistant)) {
+                assistant.Dispose();
+                await assistantCreator.CleanUpAssistantAsync(assistantId);
+            }
+        }
+        
+        public void Dispose() {
+            foreach(var assistant in Assistants.Values) {
                 assistant.Dispose();
             }
+            Assistants.Clear();
         }
     }
 }
