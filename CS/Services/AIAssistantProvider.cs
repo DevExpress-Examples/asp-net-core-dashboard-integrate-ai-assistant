@@ -6,55 +6,55 @@ using DevExpress.AIIntegration.Services.Assistant;
 using DevExpress.Utils;
 
 namespace DashboardAIAssistant.Services {
-    public class AIAssistantProvider : IAIAssistantProvider, IDisposable {
+    public class AIAssistantProvider : IAIAssistantProvider, IAsyncDisposable {
         private readonly IAIAssistantFactory assistantFactory;
-        private readonly AIAssistantCreator assistantCreator;
-        private ConcurrentDictionary<string, IAIAssistant> Assistants { get; set; } = new();
+        private readonly AIAssistantManager assistantManager;
+        private ConcurrentDictionary<string, (IAIAssistant, AIAssistantData)> Assistants { get; set; } = new();
 
-        public AIAssistantProvider(IAIAssistantFactory assistantFactory, AIAssistantCreator assistantCreator) {
+        public AIAssistantProvider(IAIAssistantFactory assistantFactory, AIAssistantManager assistantManager) {
             this.assistantFactory = assistantFactory;
-            this.assistantCreator = assistantCreator;
+            this.assistantManager = assistantManager;
         }
 
         public async Task<string> CreateAssistant(Stream fileContent, string prompt) {
             Guard.ArgumentNotNull(fileContent, nameof(fileContent));
             Guard.ArgumentIsNotNullOrEmpty(prompt, nameof(prompt));
 
-            string guid = Guid.NewGuid().ToString();
-            (string assistantId, string threadId) = await assistantCreator.CreateAssistantAndThreadAsync(fileContent, $"{guid}.xlsx", prompt);
+            string assistantName = Guid.NewGuid().ToString();
+            var assistantData = await assistantManager.CreateAssistantAndThreadAsync(fileContent, $"{assistantName}.xlsx", prompt);
 
-            IAIAssistant assistant = await assistantFactory.GetAssistant(assistantId, threadId);
+            IAIAssistant assistant = await assistantFactory.GetAssistant(assistantData.AssistantId, assistantData.ThreadId);
             await assistant.InitializeAsync();
 
-            Assistants.TryAdd(assistantId, assistant);
+            Assistants.TryAdd(assistantName, (assistant, assistantData));
 
-            return assistantId;
+            return assistantName;
         }
 
-        public IAIAssistant GetAssistant(string assistantId) {
-            Guard.ArgumentIsNotNullOrEmpty(assistantId, nameof(assistantId));
+        public IAIAssistant GetAssistant(string assistantName) {
+            Guard.ArgumentIsNotNullOrEmpty(assistantName, nameof(assistantName));
 
-            IAIAssistant assistant = null;
-
-            if(!Assistants.TryGetValue(assistantId, out assistant)) {
-                throw new ArgumentException($"Incorrect assistant id: {assistantId}");
+            if(!Assistants.TryGetValue(assistantName, out var tuple)) {
+                throw new ArgumentException($"Incorrect assistant id: {assistantName}");
             }
 
-            return assistant;
+            return tuple.Item1;
         }
 
-        public async Task DisposeAssistant(string assistantId) {
-            Guard.ArgumentIsNotNullOrEmpty(assistantId, nameof(assistantId));
+        public async Task DisposeAssistant(string assistantName) {
+            Guard.ArgumentIsNotNullOrEmpty(assistantName, nameof(assistantName));
 
-            if(Assistants.TryRemove(assistantId, out IAIAssistant assistant)) {
+            if(Assistants.TryRemove(assistantName, out var tuple)) {
+                var (assistant, assistantData) = tuple;
                 assistant.Dispose();
-                await assistantCreator.CleanUpAssistantAsync(assistantId);
+                await assistantManager.CleanUpAssistantAsync(assistantData);
             }
         }
         
-        public void Dispose() {
-            foreach(var assistant in Assistants.Values) {
+        public async ValueTask DisposeAsync() {
+            foreach(var (assistant, assistantData) in Assistants.Values) {
                 assistant.Dispose();
+                await assistantManager.CleanUpAssistantAsync(assistantData);
             }
             Assistants.Clear();
         }
