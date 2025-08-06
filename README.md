@@ -86,11 +86,11 @@ On the server side, the `AIAssistantProvider` service manages assistants. An `IA
 public interface IAIAssistantProvider {
     Task<string> CreateAssistant(Stream fileContent, string prompt);
     IAIAssistant GetAssistant(string assistantId);
-    void DisposeAssistant(string assistantId);
+    Task DisposeAssistant(string assistantName);
 }
 ```
 
-The `AIAssistantCreator.CreateAssistantAndThreadAsync` method uploads a file to OpenAI, configures tool resources, creates an assistant with specified instructions and tools, initializes a new thread, and returns the assistant and thread IDs. The generated assistant and thread IDs are then passed to the `IAIAssistantFactory.GetAssistant` method, which returns an `IAIAssistant` instance. The created instance is added to the application's assistant collection and is referenced by its unique name.
+The `AIAssistantManager.CreateAssistantAndThreadAsync` method uploads a file to OpenAI, configures tool resources, creates an assistant with specified instructions and tools, initializes a new thread, and returns the assistant, thread, and file IDs (an `AIAssistantData` object). The generated assistant and thread IDs are then passed to the `IAIAssistantFactory.GetAssistant` method, which returns an `IAIAssistant` instance. The created instance is added to the application's assistant collection and is referenced by its unique name.
 
 For information on OpenAI Assistants, refer to the following documents: 
 - [OpenAI Assistants API overview](https://platform.openai.com/docs/assistants/overview)
@@ -103,7 +103,7 @@ Files to Review:
 - [IAIAssistantProvider.cs](./CS/Services/IAIAssistantProvider.cs)
 - [AIAssistantProvider.cs](./CS/Services/AIAssistantProvider.cs)
 - [AIAssistantProvider.cs](./CS/Services/AIAssistantProvider.cs)
-- [AIAssistantCreator.cs](./CS/Services/AIAssistantCreator.cs)
+- [AIAssistantManager.cs](./CS/Services/AIAssistantManager.cs)
 
 ### Create an AI Assistant Custom Item
 
@@ -213,7 +213,7 @@ async onMessageEntered(e) {
 - [IAIAssistantProvider.cs](./CS/Services/IAIAssistantProvider.cs)
 - [AIChatController.cs](./CS/Controllers/AIChatController.cs)
 - [AssistantHelper.cs](./CS/Services/AssistantHelper.cs)
-- [AIAssistantCreator.cs](./CS/Services/AIAssistantCreator.cs)
+- [AIAssistantManager.cs](./CS/Services/AIAssistantManager.cs)
 
 ## Documentation
 
