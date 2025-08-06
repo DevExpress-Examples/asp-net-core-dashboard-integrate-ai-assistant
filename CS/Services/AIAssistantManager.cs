@@ -3,6 +3,7 @@ using System.ClientModel;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using OpenAI;
 using OpenAI.Assistants;
 using OpenAI.Files;
@@ -18,12 +19,14 @@ namespace DashboardAIAssistant.Services {
     public class AIAssistantManager {
         readonly AssistantClient assistantClient;
         readonly OpenAIFileClient fileClient;
+        readonly ILogger<AIAssistantManager> logger;
         readonly string deployment;
 
-        public AIAssistantManager(OpenAIClient client, string deployment) {
+        public AIAssistantManager(OpenAIClient client, string deployment, ILogger<AIAssistantManager> logger) {
             assistantClient = client.GetAssistantClient();
             fileClient = client.GetOpenAIFileClient();
             this.deployment = deployment;
+            this.logger = logger;
         }
 
         public async Task<AIAssistantData> CreateAssistantAndThreadAsync(Stream data, string fileName, string instructions, CancellationToken ct = default) {
@@ -55,19 +58,15 @@ namespace DashboardAIAssistant.Services {
         
         public async Task CleanUpAssistantAsync(AIAssistantData assistantData) {
             try{
-                if(!string.IsNullOrEmpty(assistantData.AssistantId)){
+                if(assistantData != null){
                     await assistantClient.DeleteAssistantAsync(assistantData.AssistantId);
-                }
-
-                if(!string.IsNullOrEmpty(assistantData.ThreadId)){
                     await assistantClient.DeleteThreadAsync(assistantData.ThreadId);
-                }
-
-                if(!string.IsNullOrEmpty(assistantData.FileId)){
                     await fileClient.DeleteFileAsync(assistantData.FileId);
                 }
             }
-            catch{}
+            catch(Exception e) {
+                logger.LogError($"Error cleaning up assistant: {e.Message}\n{e.StackTrace}");
+            }
         }
     }
 #pragma warning restore OPENAI001
