@@ -20,9 +20,9 @@ To answer user questions, the AI Assistant reviews/analyzes all data displayed w
 > [!Note]
 > We use the following versions of the `Microsoft.Extensions.AI.*` libraries in our source code:
 >
-> - Microsoft.Extensions.AI.Abstractions: **9.5.0**
-> - Microsoft.Extensions.AI: **9.5.0**
-> - Microsoft.Extensions.AI.OpenAI: **9.5.0-preview.1.25265.7**
+> - Microsoft.Extensions.AI.Abstractions: **9.7.1**
+> - Microsoft.Extensions.AI: **9.7.1**
+> - Microsoft.Extensions.AI.OpenAI: **9.7.1-preview.1.25365.4**
 >
 > We cannot guarantee compatibility with other versions. 
 
