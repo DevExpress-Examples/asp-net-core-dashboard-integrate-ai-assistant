@@ -73,12 +73,15 @@ let AIChatCustomItem = (function() {
             }
         }
 
-        renderAssistantMessage(message) {
+        clearTypingIndicators() {
             this.component.option({ typingUsers: [] });
+        }
+        renderAssistantMessage(message) {
+            this.clearTypingIndicators();
             this.component.renderMessage({ timestamp: new Date(), text: message, author: assistant.name, id: assistant.id });
         }
         alertErrors(errorList) {
-            this.component.option('alerts', errorList)
+            this.component.option('alerts', errorList);
         }
         getMessageHistory() {
             return this.component.option('items');
@@ -217,12 +220,11 @@ let AIChatCustomItem = (function() {
             return !!this.chatId;
         }
 
-        async getAnswer(question) {
+        getAnswer(question) {
             const formData = new FormData();
             formData.append('chatId', this.chatId);
             formData.append('question', question);
-            try {
-                return await this._tryFetch(async () => {
+            return this._tryFetch(async () => {
                     const response = await fetch('/AIChat/GetAnswer', {
                         method: 'POST',
                         body: formData
@@ -233,10 +235,7 @@ let AIChatCustomItem = (function() {
                         return;
                     }
                     return await response.text();
-                }, 'GetAnswer');
-            } finally {
-                this.isLoading = false;
-            }
+            }, 'GetAnswer');
         }
 
         async closeChat() {
@@ -244,25 +243,25 @@ let AIChatCustomItem = (function() {
                 return;
 
             const params = new URLSearchParams({ chatId: this.chatId });
-            try{
-                await this._tryFetch(async () => {
-                    await fetch(`/AIChat/CloseChat?${params}`, {
-                        method: 'GET'
-                    });
-                }, 'CloseAnswer');
-            } finally {
-                this.chatId = '';
-            }
+            await this._tryFetch(async () => {
+                await fetch(`/AIChat/CloseChat?${params}`, {
+                    method: 'GET'
+                });
+            }, 'CloseAnswer');
+            this.chatId = undefined;
         }
 
         async getAIResponse(question) {
             this.lastUserQuery = question;
             this.isLoading = true;
 
-            if(!this.chatId && !await this.tryCreateChat())
-                return;
-            const answer = await this.getAnswer(question);
-            this.currentViewItem?.renderAssistantMessage(answer);
+            if(this.chatId || await this.tryCreateChat()) {
+                const answer = await this.getAnswer(question);
+                this.currentViewItem?.renderAssistantMessage(answer);
+            } else {
+                this.currentViewItem?.clearTypingIndicators();
+            }
+            this.isLoading = false;
         };
 
         async reloadLastRequest() {
