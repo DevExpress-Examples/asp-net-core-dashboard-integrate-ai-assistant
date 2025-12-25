@@ -36,18 +36,16 @@ let AIChatCustomItem = (function() {
     };
 
     class AIChat extends DevExpress.Dashboard.CustomItemViewer {
-        constructor(model, $container, options, dashboardControl) {
+        constructor(model, $container, options, dashboardControl, chatModel) {
             super(model, $container, options);
 
-            this.chatId = '';
-            this.lastUserQuery = '';
             this.lastRefreshButton = undefined;
             this.model.selectedSheet = undefined;
             this.model.updateChatItem = undefined;
             this.component = undefined;
-            this.errorList = [];
             this.dashboardControl = dashboardControl;
             this.disabledSubscription = undefined;
+            this.chatModel = chatModel;
             this.dashboardControl.on('dashboardInitialized', this.controlStateChangedHandler);
             this.dashboardControl.on('dashboardStateChanged', this.controlStateChangedHandler);
         }
@@ -58,89 +56,9 @@ let AIChatCustomItem = (function() {
             this.dashboardControl.off('dashboardStateChanged', this.controlStateChangedHandler);
         }
         
-        async _tryFetch(fetchAction, message) {            
-            try {
-                return await fetchAction();
-            }
-            catch(error) {
-                this._handleError({ message: error.message, code: message });
-            }
-        }
-
-        _handleError(error) {
-            const id = "id" + Math.random().toString(16).slice(2)
-            setTimeout(() => {
-                this.errorList = this.errorList.filter(err => err.id !== id);
-                this.component.option('alerts', this.errorList);
-            }, 10000);
-            this.errorList.push({
-                id: id,
-                message: `${error.code} - ${error.message}`
-            });
-            this.component.option('alerts', this.errorList);
-        }
-
         controlStateChangedHandler = async (args) => {
-            await this.closeChat(this.chatId);
-            this.chatId = undefined;
+            await this.chatModel.closeChat();
         }
-
-        createChat(dashboardId, dashboardState) {
-            const formData = new FormData();
-            formData.append('dashboardId', dashboardId);
-            formData.append('dashboardState', dashboardState);
-            return this._tryFetch(async () => {
-                const response = await fetch('/AIChat/CreateChat', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if(!response.ok) {
-                    this._handleError({ code: `${response.status}`, message: `Internal server error` });
-                    return;
-                }
-                return await response.text();
-            }, 'CreateChat');
-        }
-
-        getAnswer(chatId, question) {
-            const formData = new FormData();
-            formData.append('chatId', chatId);
-            formData.append('question', question);
-            return this._tryFetch(async () => {
-                const response = await fetch('/AIChat/GetAnswer', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if(!response.ok) {
-                    this._handleError({ code: `${response.status}`, message: `Internal server error` });
-                    return;
-                }
-                return await response.text();
-            }, 'GetAnswer');
-        }
-
-        closeChat(chatId) {
-            if (!chatId)
-                return;
-
-            const params = new URLSearchParams({ chatId });
-            return this._tryFetch(async () => {
-                await fetch(`/AIChat/CloseChat?${params}`, {
-                    method: 'GET'
-                });
-            }, 'CloseAnswer');
-        }
-
-        async getAIResponse(question) {
-            this.lastUserQuery = question;
-
-            if(!this.chatId)
-                this.chatId = await this.createChat(this.dashboardControl.getDashboardId(), this.dashboardControl.getDashboardState());
-            if(this.chatId)
-                return await this.getAnswer(this.chatId, question);
-        };
 
         normalizeAIResponse(text) {
             if (text) {
@@ -155,9 +73,18 @@ let AIChatCustomItem = (function() {
             }
         }
 
-        renderAssistantMessage(instance, message) {
-            instance.option({ typingUsers: [] });
-            instance.renderMessage({ timestamp: new Date(), text: message, author: assistant.name, id: assistant.id });
+        clearTypingIndicators() {
+            this.component.option({ typingUsers: [] });
+        }
+        renderAssistantMessage(message) {
+            this.clearTypingIndicators();
+            this.component.renderMessage({ timestamp: new Date(), text: message, author: assistant.name, id: assistant.id });
+        }
+        alertErrors(errorList) {
+            this.component.option('alerts', errorList);
+        }
+        getMessageHistory() {
+            return this.component.option('items');
         }
 
         async refreshAnswer(instance) {
@@ -165,11 +92,7 @@ let AIChatCustomItem = (function() {
             const newItems = items.slice(0, -1);
             instance.option({ items: newItems });
             instance.option({ typingUsers: [assistant] });
-            const aiResponse = await this.getAIResponse(this.lastUserQuery);
-            setTimeout(() => {
-                instance.option({ typingUsers: [] });
-                this.renderAssistantMessage(instance, aiResponse);
-            }, 200);
+            await this.chatModel.reloadLastRequest();
         }
 
         messageTemplate(data, $container) {
@@ -213,28 +136,34 @@ let AIChatCustomItem = (function() {
             instance.option({ typingUsers: [assistant] });
             const userInput = e.message.text + ((this.model.selectedSheet && "\nDiscuss item " + this.model.selectedSheet)
                 || "\nLet's discuss all items");
-            const response = await this.getAIResponse(userInput);
-            this.renderAssistantMessage(instance, response);
+            await this.chatModel.getAIResponse(userInput);
         }
 
-        renderContent($container, changeExisting) {
-            const container = $container.jquery ? $container.get(0) : $container;
-            const element = document.createElement('div');
-            container.appendChild(element);
-
-            this.component = new DevExpress.ui.dxChat(element, {
-                messageTemplate: this.messageTemplate.bind(this),
-                onMessageEntered: this.onMessageEntered.bind(this),
-                showAvatar: false,
-                showMessageTimestamp: false,
-                showUserName: false,
-                title: "AI Assistant",
-                disabled: this.dashboardControl.isDesignMode(),
-                user
-            });
-            this.disabledSubscription = this.dashboardControl.isDesignMode.subscribe(value => {
-                this.component.option('disabled', value)
-            });
+        renderContent($container) {
+            const state = this.chatModel.getState();
+            if(this.component) {
+                this.component.option(state);
+            } else {
+                const container = $container.jquery ? $container.get(0) : $container;
+                const element = document.createElement('div');
+                container.appendChild(element);
+                this.component = new DevExpress.ui.dxChat(element, {
+                    messageTemplate: this.messageTemplate.bind(this),
+                    onMessageEntered: this.onMessageEntered.bind(this),
+                    showAvatar: false,
+                    showMessageTimestamp: false,
+                    showUserName: false,
+                    title: "AI Assistant",
+                    disabled: this.dashboardControl.isDesignMode(),
+                    user,
+                    ...state
+                });
+                
+                this.disabledSubscription = this.dashboardControl.isDesignMode.subscribe(value => {
+                    this.component.option('disabled', value)
+                });
+            }
+            this.chatModel.currentViewItem = this;
         }
     }
     class AIChatCustomItem {
@@ -243,10 +172,113 @@ let AIChatCustomItem = (function() {
             this.dashboardControl = dashboardControl;
             this.name = AI_CHAT_CUSTOM_ITEM;
             this.metaData = aiChatMetadata;
+            this.chatId = '';
+            this.lastUserQuery = '';
+            this.errorList = [];
+            this.isLoading = false;
+            this.currentViewItem = null;
         }
-   
+
+        async _tryFetch(fetchAction, message) {            
+            try {
+                return await fetchAction();
+            }
+            catch(error) {
+                this._handleError({ message: error.message, code: message });
+            }
+        }
+
+        _handleError(error) {
+            const id = "id" + Math.random().toString(16).slice(2)
+            setTimeout(() => {
+                this.errorList = this.errorList.filter(err => err.id !== id);
+                this.currentViewItem?.alertErrors(this.errorList);
+            }, 10000);
+            this.errorList.push({
+                id: id,
+                message: `${error.code} - ${error.message}`
+            });
+            this.currentViewItem?.alertErrors(this.errorList);
+        }
+
+        async tryCreateChat() {
+            const formData = new FormData();
+            formData.append('dashboardId', this.dashboardControl.getDashboardId());
+            formData.append('dashboardState', this.dashboardControl.getDashboardState());
+            this.chatId = await this._tryFetch(async () => {
+                const response = await fetch('/AIChat/CreateChat', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if(!response.ok) {
+                    this._handleError({ code: `${response.status}`, message: `Internal server error` });
+                    return;
+                }
+                return await response.text();
+            }, 'CreateChat');
+            return !!this.chatId;
+        }
+
+        getAnswer(question) {
+            const formData = new FormData();
+            formData.append('chatId', this.chatId);
+            formData.append('question', question);
+            return this._tryFetch(async () => {
+                    const response = await fetch('/AIChat/GetAnswer', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        this._handleError({ code: `${response.status}`, message: `Internal server error` });
+                        return;
+                    }
+                    return await response.text();
+            }, 'GetAnswer');
+        }
+
+        async closeChat() {
+            if (!this.chatId)
+                return;
+
+            const params = new URLSearchParams({ chatId: this.chatId });
+            await this._tryFetch(async () => {
+                await fetch(`/AIChat/CloseChat?${params}`, {
+                    method: 'GET'
+                });
+            }, 'CloseAnswer');
+            this.chatId = undefined;
+        }
+
+        async getAIResponse(question) {
+            this.lastUserQuery = question;
+            this.isLoading = true;
+
+            if(this.chatId || await this.tryCreateChat()) {
+                const answer = await this.getAnswer(question);
+                this.currentViewItem?.renderAssistantMessage(answer);
+            } else {
+                this.currentViewItem?.clearTypingIndicators();
+            }
+            this.isLoading = false;
+        };
+
+        async reloadLastRequest() {
+            if(!this.lastUserQuery)
+                return;
+            await this.getAIResponse(this.lastUserQuery);
+        }
+
+        getState() {
+            return {
+                items: this.currentViewItem?.getMessageHistory() || [],
+                typingUsers: this.isLoading ? [assistant] : []
+            }
+        }
+
         createViewerItem = (model, $element, options) => {
-            return new AIChat(model, $element, options, this.dashboardControl);
+            return new AIChat(model, $element, options, this.dashboardControl, this);
         }
     }
 
