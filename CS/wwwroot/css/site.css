@@ -7,6 +7,11 @@ div.dx-dashboard-item.dx-chat {
     display: flex;
 }
 
+.dx-chat {
+    min-height: 0;
+    min-width: 0;
+}
+
 .dx-chat-messagelist-content .dx-chat-messagegroup-alignment-start,
 .dx-chat-messagelist-content .dx-chat-last-messagegroup-alignment-start {
     column-gap: 0;
