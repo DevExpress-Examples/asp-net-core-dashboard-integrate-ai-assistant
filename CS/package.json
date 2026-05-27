@@ -3,9 +3,9 @@
     "version": "1.0.0",
     "private": true,
     "dependencies": {
-        "devextreme-dist": "25.2.2-beta",
-        "@devexpress/analytics-core": "25.2.2-beta",
-        "devexpress-dashboard": "25.2.2-beta",
+        "devextreme-dist": "26.1.2-beta",
+        "@devexpress/analytics-core": "26.1.2-beta",
+        "devexpress-dashboard": "26.1.2-beta",
         "marked": "^14.1.3"
     }
 }
