@@ -53,12 +53,10 @@ var azureOpenAIClient = new AzureOpenAIClient(
 var chatClient = azureOpenAIClient.GetChatClient(EnvSettings.DeploymentName).AsIChatClient();
 
 builder.Services.AddSingleton(chatClient);
-builder.Services.AddSingleton<AIAssistantManager>(sp => new(azureOpenAIClient, EnvSettings.DeploymentName, sp.GetRequiredService<ILogger<AIAssistantManager>>()));
-builder.Services.AddSingleton<IAIAssistantProvider, AIAssistantProvider>();
-builder.Services.AddDevExpressAI(config =>
-{
-    config.RegisterOpenAIAssistants(azureOpenAIClient, EnvSettings.DeploymentName);
-});
+builder.Services.AddSingleton<AgentFactory>(sp =>
+    new(azureOpenAIClient, EnvSettings.DeploymentName, sp.GetRequiredService<ILogger<AgentFactory>>()));
+builder.Services.AddSingleton<IAIDashboardChatService, AIDashboardChatService>();
+builder.Services.AddDevExpressAI(config => { });
 
 builder.Services.AddScoped<AspNetCoreDashboardExporter>();
 
