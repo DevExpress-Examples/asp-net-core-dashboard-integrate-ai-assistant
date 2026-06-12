@@ -78,7 +78,7 @@ public interface IAIDashboardChatService {
 The `AgentFactory` class creates an agent that answers user questions. When a chat opens, `AgentFactory.CreateChatProviderAsync` does the following:
 
 1. Uploads the exported Excel file to Azure OpenAI.
-2. Creates a Responses API agent with the Code Interpreter tool. The tool runs Python against the data to compute summaries, calculations, filters, and trends.
+2. Creates a Responses API agent with the Code Interpreter tool. 
 3. Starts a session that preserves the conversation history.
 4. Returns an `IChatResponseProvider`.
 
