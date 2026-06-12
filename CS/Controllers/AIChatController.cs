@@ -5,7 +5,6 @@ using DashboardAIAssistant.Services;
 using DevExpress.DashboardAspNetCore;
 using DevExpress.DashboardCommon;
 using DevExpress.Utils;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.AI;
 
@@ -13,12 +12,10 @@ namespace DashboardAIAssistant.Controllers {
     public class AIChatController : Controller {
         private readonly IAIDashboardChatService chatService;
         private readonly AspNetCoreDashboardExporter exporter;
-        private readonly IHttpContextAccessor contextAccessor;
 
-        public AIChatController(AspNetCoreDashboardExporter exporter, IAIDashboardChatService chatService, IHttpContextAccessor contextAccessor) {
+        public AIChatController(AspNetCoreDashboardExporter exporter, IAIDashboardChatService chatService) {
             this.exporter = exporter;
             this.chatService = chatService;
-            this.contextAccessor = contextAccessor;
         }
 
         [HttpPost]
@@ -31,7 +28,7 @@ namespace DashboardAIAssistant.Controllers {
 
                 exporter.ExportToExcel(dashboardId, ms, state, new DashboardExcelExportOptions() { ExportParameters = true, ExportFilters = true });
 
-                return await chatService.OpenDashboardChatAsync(ms);
+                return await chatService.OpenChatAsync(ms);
             }
         }
 

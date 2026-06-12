@@ -12,6 +12,8 @@ using OpenAI.Files;
 using OpenAI.Responses;
 
 namespace DashboardAIAssistant.Services {
+    // The OpenAI.Responses API is for evaluation purposes only and is subject to change or removal in a future update.
+    // The following code suppresses the OPENAI001 diagnostic.
 #pragma warning disable OPENAI001
     public class AgentFactory {
         readonly AzureOpenAIClient openAIClient;
@@ -24,10 +26,10 @@ namespace DashboardAIAssistant.Services {
             this.logger = logger;
         }
 
-        // Uploads an Excel stream to OpenAI and returns an IChatResponseProvider backed
-        // by a Responses API agent with a code interpreter tool.
+        // Upload an Excel stream to OpenAI and return an IChatResponseProvider backed
+        // by a Responses API agent with a Code Interpreter tool.
         // The cleanup delegate removes the uploaded file when the chat session ends.
-        public async Task<(IChatResponseProvider Provider, Func<Task> Cleanup)> CreateAgentWithFileAsync(
+        public async Task<(IChatResponseProvider Provider, Func<Task> Cleanup)> CreateChatProviderAsync(
             Stream data, string fileName, string instructions, CancellationToken ct = default) {
 
             var fileClient = openAIClient.GetOpenAIFileClient();
@@ -48,6 +50,7 @@ namespace DashboardAIAssistant.Services {
                 name: $"Dashboard Agent {Guid.NewGuid():N}",
                 model: deployment);
 
+            // Create a session so the assistant remembers earlier messages and can answer follow-up questions in context.
             var session = await aiAgent.CreateSessionAsync(ct);
             var provider = aiAgent.AsIChatResponseProvider(session);
 
