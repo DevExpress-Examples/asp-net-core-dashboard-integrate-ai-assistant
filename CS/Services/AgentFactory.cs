@@ -50,7 +50,7 @@ namespace DashboardAIAssistant.Services {
                 name: $"Dashboard Agent {Guid.NewGuid():N}",
                 model: deployment);
 
-            // Create a session so the assistant remembers earlier messages and can answer follow-up questions in context.
+            // Create a session so the assistant remembers message history and can answer follow-up questions in context.
             var session = await aiAgent.CreateSessionAsync(ct);
             var provider = aiAgent.AsIChatResponseProvider(session);
 

@@ -14,7 +14,7 @@ User requests and AI assistant responses are displayed on-screen (within the Dev
 
 To answer user questions, the AI Assistant analyzes all data displayed within the DevExpress BI Dashboard. You can filter available data if you select a specific Dashboard item. Click the **Select widget** button in the AI Assistant custom item caption and select the desired widget. Note: updates to parameters/master filters or other data changes automatically trigger recreation of the AI Assistant.
 
-The application exports the current dashboard data to an Excel file, uploads it to Azure OpenAI, and creates a chat agent using the [Azure OpenAI Responses API](https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses?tabs=csharp). The agent uses the Code Interpreter tool to analyze the data.
+The application exports the current dashboard data to an Excel file, uploads it to Azure OpenAI, and creates a chat agent using the [Azure OpenAI Responses API](https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses?tabs=csharp). The agent uses the Code Interpreter tool to analyze data.
 
 
 ## Implementation Details
@@ -65,7 +65,7 @@ Files to Review:
 
 ### AI Assistant Provider
 
-On the server side, the `AIDashboardChatService` service manages chat sessions:
+On the server side, the `AIDashboardChatService` manages chat sessions:
 
 ```cs
 public interface IAIDashboardChatService {
@@ -75,7 +75,7 @@ public interface IAIDashboardChatService {
 }
 ```
 
-The `AgentFactory` class creates the agent that answers user questions. When a chat opens, `AgentFactory.CreateChatProviderAsync`:
+The `AgentFactory` class creates an agent that answers user questions. When a chat opens, `AgentFactory.CreateChatProviderAsync` does the following:
 
 1. Uploads the exported Excel file to Azure OpenAI.
 2. Creates a Responses API agent with the Code Interpreter tool. The tool runs Python against the data to compute summaries, calculations, filters, and trends.
@@ -149,7 +149,7 @@ File to Review:
 The [`AIChatController`](./CS/Controllers/AIChatController.cs) exposes the endpoints that the custom item calls:
 
 - `CreateChat` — exports the current dashboard data to an Excel file and calls `OpenChatAsync` to upload it and start a chat session. Returns the session id.
-- `GetAnswer` — resolves the session's `IChatResponseProvider` and forwards the question to the agent.
+- `GetAnswer` — resolves the session `IChatResponseProvider` and forwards the question to the agent.
 - `CloseChat` — calls `CloseChatAsync` to end the session and delete the uploaded file.
 
 On the client, the custom item closes the current chat whenever the dashboard is initialized or its [dashboard state](https://docs.devexpress.com/Dashboard/DevExpress.DashboardCommon.DashboardState) changes (for example, after a master filter or parameter update) and opens a new one on the next question — so the assistant always works with up-to-date data.
