@@ -84,7 +84,7 @@ The `AgentFactory` class creates an agent that answers user questions. When a ch
 
 `AIDashboardChatService` stores each provider by session id and deletes the uploaded file when the chat is closed.
 
-For information on OpenAI Responses API, refer to the following documents: 
+For information on the OpenAI Responses API, refer to the following documents: 
 - [Azure OpenAI Responses API](https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses?tabs=csharp)
 - [OpenAI Responses API](https://developers.openai.com/api/reference/responses/overview)
 - [Code Interpreter tool](https://developers.openai.com/api/docs/guides/tools-code-interpreter)
@@ -101,11 +101,11 @@ Files to Review:
 
 This example implements a [custom item](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item) based on the [`dxChat`](https://js.devexpress.com/jQuery/Documentation/Guide/UI_Components/Chat/Overview/) component.
 
-For instructions on how to implement custom BI Dashboard items, refer to the following tutorials: [Create a Custom Item for the Web Dashboard](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item).
+For instructions on how to implement custom BI Dashboard items, refer to the following tutorial: [Create a Custom Item for the Web Dashboard](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item).
 
 For our **AI Assistant** custom item implementation, review the following file: [aiChatCustomItem.js](./CS/wwwroot/js/aiChatCustomItem.js).
 
-Additional logic for the custom item is implemented in the [Index.cshtml](./CS/Pages/Index.cshtml) file. The `itemCaptionToolbarUpdated` event is used to add a **Select Widget** button to the item's caption. This button allows users to select a BI Dashboard item and narrow data available to the AI Assistant. The `DashboardInitialized` event handler implements _one AI Assistant per dashboard_ logic.
+Additional logic for the custom item is implemented in the [Index.cshtml](./CS/Pages/Index.cshtml) file. The `itemCaptionToolbarUpdated` event is used to add a **Select Widget** button to the item's caption. This button allows users to select a BI Dashboard item and narrow the data available to the AI Assistant. The `DashboardInitialized` event handler implements _one AI Assistant per dashboard_ logic.
 
 Files to Review:
 - [Index.cshtml](./CS/Pages/Index.cshtml)
