@@ -22,18 +22,19 @@
                     title: 'Dashboard items',
                     itemClick: function (itemData) {
                         e.dashboardItem.selectedSheet = itemData !== ALL_WIDGETS ? itemData : null;
-                        const selectedItemName = 'ai-assistant-selected-item';
-                        e.options.staticItems = e.options.staticItems.filter(item => item.name !== selectedItemName);
-                        if(e.dashboardItem.selectedSheet) {
-                            e.options.staticItems.push({
-                                name: selectedItemName,
-                                type: 'text',
-                                text: ` - ${e.dashboardItem.selectedSheet}`
-                            });
-                        }
+                        dashboardControl.findExtension('viewerApi').updateItemCaptionToolbar(e.itemName);
                     }
                 }
             });
+            const selectedItemName = 'ai-assistant-selected-item';
+            e.options.staticItems = e.options.staticItems.filter(item => item.name !== selectedItemName);
+            if(e.dashboardItem.selectedSheet) {
+                e.options.staticItems.push({
+                    name: selectedItemName,
+                    type: 'text',
+                    text: ` - ${e.dashboardItem.selectedSheet}`
+                });
+            }
         }
     }
 

@@ -2,7 +2,6 @@ using Azure;
 using Azure.AI.OpenAI;
 using DashboardAIAssistant;
 using DashboardAIAssistant.Services;
-using DevExpress.AIIntegration;
 using DevExpress.AspNetCore;
 using DevExpress.DashboardAspNetCore;
 using DevExpress.DashboardCommon;
@@ -34,7 +33,7 @@ builder.Services.AddScoped((IServiceProvider serviceProvider) => {
 
     DataSourceInMemoryStorage dataSourceStorage = new DataSourceInMemoryStorage();
 
-    // Registers an Excel data source.
+    // Register an Excel data source.
     DashboardExcelDataSource excelDataSource = new DashboardExcelDataSource("Excel Data Source");
     excelDataSource.FileName = builder.Environment.ContentRootFileProvider.GetFileInfo("Data/Sales.xlsx").PhysicalPath;
     excelDataSource.SourceOptions = new ExcelSourceOptions(new ExcelWorksheetSettings("Sheet1"));
@@ -52,11 +51,9 @@ var azureOpenAIClient = new AzureOpenAIClient(
     new AzureKeyCredential(EnvSettings.AzureOpenAIKey));
 var chatClient = azureOpenAIClient.GetChatClient(EnvSettings.DeploymentName).AsIChatClient();
 
-builder.Services.AddSingleton(chatClient);
 builder.Services.AddSingleton<AgentFactory>(sp =>
     new(azureOpenAIClient, EnvSettings.DeploymentName, sp.GetRequiredService<ILogger<AgentFactory>>()));
 builder.Services.AddSingleton<IAIDashboardChatService, AIDashboardChatService>();
-builder.Services.AddDevExpressAI(config => { });
 
 builder.Services.AddScoped<AspNetCoreDashboardExporter>();
 

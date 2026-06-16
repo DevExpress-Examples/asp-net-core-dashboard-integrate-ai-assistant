@@ -4,27 +4,17 @@
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 [![](https://img.shields.io/badge/💬_Leave_Feedback-feecdd?style=flat-square)](#does-this-example-address-your-development-requirementsobjectives)
 <!-- default badges end -->
-# DevExpress BI Dashboard for ASP.NET Core — Azure OpenAI-based AI Assistant
+# DevExpress BI Dashboard for ASP.NET Core — Integrate an AI Assistant (Azure OpenAI)
 
 Sample ASP.NET Core application using DevExpress BI Dashboard with an integrated AI Assistant.  
 
-User requests and AI assistant responses are displayed on-screen (within the DevExtreme [`dxChat`](https://js.devexpress.com/jQuery/Documentation/24_2/ApiReference/UI_Components/dxChat/) component). The AI Assistant is implemented as a [custom BI Dashboard item](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item) (based on the `dxChat` widget).
+User requests and AI assistant responses are displayed on-screen (within the DevExtreme Chat Component — [`dxChat`](https://js.devexpress.com/jQuery/Documentation/24_2/ApiReference/UI_Components/dxChat/)). The AI Assistant is implemented as a [custom BI Dashboard item](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item) (based on our `dxChat` widget).
 
 ![DevExpress BI Dashboard - Integrate an AI Assistant](images/dashboard-ai-assistant.png)
 
+To answer user questions, the AI Assistant analyzes all data displayed within the DevExpress BI Dashboard. You can filter available data if you select a specific Dashboard item. Click the Select widget button in the AI Assistant custom item caption and select the desired widget. Note: updates to parameters/master filters or other data changes automatically trigger recreation of the AI Assistant.
 
-To answer user questions, the AI Assistant reviews/analyzes all data displayed within the DevExpress BI Dashboard. You can filter available data if you select a specific Dashboard item. Click the **Select widget** button in the AI Assistant custom item caption and select the desired widget. Note: updates to parameters/master filters or other data changes automatically trigger recreation of the AI Assistant. 
-
-**AI Assistant initialization takes time. The Assistant is ready for interaction once Microsoft Azure scans the source document (on the server side).** 
-
-> [!Note]
-> We use the following versions of the `Microsoft.Extensions.AI.*` libraries in our source code:
->
-> - Microsoft.Extensions.AI.Abstractions: **9.7.1**
-> - Microsoft.Extensions.AI: **9.7.1**
-> - Microsoft.Extensions.AI.OpenAI: **9.7.1-preview.1.25365.4**
->
-> We cannot guarantee compatibility with other versions. 
+The application exports current dashboard data to an Excel file, uploads it to Azure OpenAI, and creates a chat agent using the [Azure OpenAI Responses API](https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses?tabs=csharp). The agent uses the Code Interpreter tool to analyze data.
 
 ## Implementation Details
 
@@ -33,15 +23,15 @@ To answer user questions, the AI Assistant reviews/analyzes all data displayed w
 > [!NOTE]  
 > DevExpress AI-powered extensions follow the "bring your own key" principle. DevExpress does not offer a REST API and does not ship any built-in LLMs/SLMs. You need an active Azure/Open AI subscription to obtain the REST API endpoint, key, and model deployment name. These variables must be specified at application startup to register AI clients and enable DevExpress AI-powered Extensions in your application.
 
-Create an Azure OpenAI resource in the Azure portal to use AI Assistants for DevExpress BI Dashboard. Refer to the following help topic for additional information in this regard: [Microsoft - Create and deploy an Azure OpenAI Service resource](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/create-resource?pivots=web-portal).
+Create an Azure OpenAI resource in the Azure portal. Refer to the following help topic for additional information: [Microsoft - Create and deploy an Azure OpenAI Service resource](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/create-resource?pivots=web-portal).
 
-Once you obtain a private endpoint and API key, register them as `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_APIKEY` environment variables. Open [EnvSettings.cs](./CS/EnvSettings.cs) to review the code that reads these settings. `DeploymentName` in this file represents the name of your Azure model, for example, GPT4o: 
+Once you obtain a private endpoint and API key, register them as `AZURE_OPENAI_ENDPOINT` and `AZURE_OPENAI_APIKEY` environment variables. Open [EnvSettings.cs](./CS/EnvSettings.cs) to review the code that reads these settings. `DeploymentName` is the name of your Azure model deployment. The model must support the Responses API and the Code Interpreter tool (for example, `gpt-5.4`): 
 
 ```cs
 public static class EnvSettings {
     public static string AzureOpenAIEndpoint { get { return Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT"); } }
     public static string AzureOpenAIKey { get { return Environment.GetEnvironmentVariable("AZURE_OPENAI_APIKEY"); } }
-    public static string DeploymentName { get { return "GPT4o"; } }
+    public static string DeploymentName { get { return "gpt-5.4"; } }
 }
 ```
 
@@ -53,63 +43,65 @@ Files to Review:
 Add the following code to the _Program.cs_ file to register AI services in your application:
 
 ```cs
-using DevExpress.AIIntegration;
 using Azure;
 using Azure.AI.OpenAI;
-using Microsoft.Extensions.AI;
-using System;
+using DashboardAIAssistant.Services;
+using Microsoft.Extensions.Logging;
 // ...
 var azureOpenAIClient = new AzureOpenAIClient(
     new Uri(EnvSettings.AzureOpenAIEndpoint),
     new AzureKeyCredential(EnvSettings.AzureOpenAIKey));
 
-var chatClient = azureOpenAIClient.GetChatClient(EnvSettings.DeploymentName).AsIChatClient();
+// Create a Responses API agent (with a Code Interpreter tool) for each chat.
+builder.Services.AddSingleton<AgentFactory>(sp =>
+    new(azureOpenAIClient, EnvSettings.DeploymentName, sp.GetRequiredService<ILogger<AgentFactory>>()));
 
-builder.Services.AddDevExpressAI(config =>
-{
-    config.RegisterOpenAIAssistants(azureOpenAIClient, EnvSettings.DeploymentName);
-});
 // ...
 ```
-
->[!NOTE]
-> Availability of Azure Open AI Assistants depends on region. Refer to the following article for additional information: [Assistants (Preview)](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models?tabs=global-standard%2Cstandard-chat-completions#assistants-preview).
 
 Files to Review: 
 - [Program.cs](./CS/Program.cs)
 
 ### AI Assistant Provider
- 
-On the server side, the `AIAssistantProvider` service manages assistants. An `IAIAssistantFactory` instance creates assistants with keys specified in previous steps.
- 
-```cs 
-public interface IAIAssistantProvider {
-    Task<string> CreateAssistant(Stream fileContent, string prompt);
-    IAIAssistant GetAssistant(string assistantId);
-    Task DisposeAssistant(string assistantName);
+
+On the server side, the `AIDashboardChatService` manages chat sessions:
+
+```cs
+public interface IAIDashboardChatService {
+    IChatResponseProvider GetChatProvider(string sessionId);
+    Task<string> OpenChatAsync(Stream excelStream);
+    Task CloseChatAsync(string sessionId);
 }
 ```
 
-The `AIAssistantManager.CreateAssistantAndThreadAsync` method uploads a file to OpenAI, configures tool resources, creates an assistant with specified instructions and tools, initializes a new thread, and returns the assistant, thread, and file IDs (an `AIAssistantData` object). The generated assistant and thread IDs are then passed to the `IAIAssistantFactory.GetAssistant` method, which returns an `IAIAssistant` instance. The created instance is added to the application's assistant collection and is referenced by its unique name.
+The `AgentFactory` class creates an agent that answers user questions. When a chat opens, `AgentFactory.CreateChatProviderAsync` does the following:
 
-For information on OpenAI Assistants, refer to the following documents: 
-- [OpenAI Assistants API overview](https://platform.openai.com/docs/assistants/overview)
-- [Azure OpenAI: OpenAI Assistants client library for .NET](https://learn.microsoft.com/en-us/dotnet/api/overview/azure/ai.openai.assistants-readme?view=azure-dotnet-preview)
-- [OpenAI .NET API library](https://github.com/openai/openai-dotnet)
+1. Uploads the exported Excel file to Azure OpenAI.
+2. Creates a Responses API agent with the Code Interpreter tool. 
+3. Starts a session that preserves the conversation history.
+4. Returns an `IChatResponseProvider`.
 
-You can review and tailor AI assistant instructions in the following file: [AssistantHelper.cs](./CS/Services/AssistantHelper.cs).
+`AIDashboardChatService` stores each provider by session id and deletes the uploaded file when the chat is closed.
+
+For information on the OpenAI Responses API, refer to the following documents:
+
+- [Azure OpenAI Responses API](https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses?tabs=csharp)
+- [OpenAI Responses API](https://developers.openai.com/api/reference/responses/overview)
+- [Code Interpreter tool](https://developers.openai.com/api/docs/guides/tools-code-interpreter)
+
+You can review and tailor the agent instructions in the following file: [AgentInstructions.cs](./CS/Services/AgentInstructions.cs).
 
 Files to Review: 
-- [IAIAssistantProvider.cs](./CS/Services/IAIAssistantProvider.cs)
-- [AIAssistantProvider.cs](./CS/Services/AIAssistantProvider.cs)
-- [AIAssistantProvider.cs](./CS/Services/AIAssistantProvider.cs)
-- [AIAssistantManager.cs](./CS/Services/AIAssistantManager.cs)
+- [IAIDashboardChatService.cs](./CS/Services/IAIDashboardChatService.cs)
+- [AIDashboardChatService.cs](./CS/Services/AIDashboardChatService.cs)
+- [AgentFactory.cs](./CS/Services/AgentFactory.cs)
+- [AgentInstructions.cs](./CS/Services/AgentInstructions.cs)
 
 ### Create an AI Assistant Custom Item
 
-This example implements a [custom item](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item) based on the [`dxChat`](https://js.devexpress.com/jQuery/Documentation/Guide/UI_Components/Chat/Overview/) component.
+This example implements a [custom item](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item) based on the DevExtreme Chat ([`dxChat`](https://js.devexpress.com/jQuery/Documentation/Guide/UI_Components/Chat/Overview/)) component.
 
-For instructions on how to implement custom BI Dashboard items, refer to the following tutorials: [Create a Custom Item for the Web Dashboard](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item).
+To implement custom BI Dashboard items, refer to the following tutorial: [Create a Custom Item for the Web Dashboard](https://docs.devexpress.com/Dashboard/117546/web-dashboard/advanced-customization/create-a-custom-item).
 
 For our **AI Assistant** custom item implementation, review the following file: [aiChatCustomItem.js](./CS/wwwroot/js/aiChatCustomItem.js).
 
@@ -143,7 +135,7 @@ Register the custom item extension in the Web Dashboard:
 </div>
 ```
 
-Once you register the extension, an AI Assistant icon will appear within the Dashboard Toolbox:
+Once you register the extension, an AI Assistant icon appears within the Dashboard Toolbox:
 
 ![DevExpress BI Dashboard - AI Assistant Custom Item Icon](images/dashboard-toolbar-ai-assistant-item.png)
 
@@ -154,13 +146,19 @@ File to Review:
 
 ### Access the Assistant
 
-Each time a Dashboard is initialized or its [dashboard state](https://docs.devexpress.com/Dashboard/DevExpress.DashboardCommon.DashboardState) changes, the application exports Dashboard data to an Excel spreadsheet and creates a new Assistant (so that the AI Assistant always processes up-to-date data).
+The [`AIChatController`](./CS/Controllers/AIChatController.cs) exposes the endpoints the custom item calls:
+
+- `CreateChat` — exports current dashboard data to an Excel file and calls `OpenChatAsync` to upload it and start a chat session. Returns the session id.
+- `GetAnswer` — resolves the session `IChatResponseProvider` and forwards the question to the agent.
+- `CloseChat` — calls `CloseChatAsync` to end the session and delete the uploaded file.
+
+On the client, the custom item closes the current chat whenever the dashboard is initialized or its [dashboard state](https://docs.devexpress.com/Dashboard/DevExpress.DashboardCommon.DashboardState) changes (for example, after a master filter or parameter update) and opens a new one on the next question — so the assistant always works with up-to-date data.
 
 Files to Review: 
 
 - [aiChatCustomItem.js](./CS/wwwroot/js/aiChatCustomItem.js)
-- [AIAssistantProvider.cs](./CS/Services/AIAssistantProvider.cs)
-- [AIChatController](./CS/Controllers/AIChatController.cs)
+- [AIDashboardChatService.cs](./CS/Services/AIDashboardChatService.cs)
+- [AIChatController.cs](./CS/Controllers/AIChatController.cs)
 
 ### Communicate with the Assistant
 
@@ -202,18 +200,18 @@ async onMessageEntered(e) {
 }
 ```
 
-[`AIChatController.GetAnswer`](./CS/Controllers/AIChatController.cs#L38) receives answers from the assistant.
+[`AIChatController.GetAnswer`](./CS/Controllers/AIChatController.cs) receives answers from the assistant.
 
 ## Files to Review
 
 - [Program.cs](./CS/Program.cs)
 - [Index.cshtml](./CS/Pages/Index.cshtml)
 - [aiChatCustomItem.js](./CS/wwwroot/js/aiChatCustomItem.js)
-- [AIAssistantProvider.cs](./CS/Services/AIAssistantProvider.cs)
-- [IAIAssistantProvider.cs](./CS/Services/IAIAssistantProvider.cs)
+- [AgentFactory.cs](./CS/Services/AgentFactory.cs)
+- [AIDashboardChatService.cs](./CS/Services/AIDashboardChatService.cs)
+- [IAIDashboardChatService.cs](./CS/Services/IAIDashboardChatService.cs)
 - [AIChatController.cs](./CS/Controllers/AIChatController.cs)
-- [AssistantHelper.cs](./CS/Services/AssistantHelper.cs)
-- [AIAssistantManager.cs](./CS/Services/AIAssistantManager.cs)
+- [AgentInstructions.cs](./CS/Services/AgentInstructions.cs)
 
 ## Documentation
 
