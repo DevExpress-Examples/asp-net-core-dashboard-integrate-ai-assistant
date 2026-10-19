@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web" InitialTargets="EnsureNodeEnv">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
   <Target Name="EnsureNodeEnv" BeforeTargets="LibraryManagerRestore" Condition=" '$(Configuration)' == 'Debug' And !Exists('node_modules') ">
     <!-- Ensure Node.js is installed -->
@@ -13,16 +13,16 @@
 	<Exec Command="npm install" />
   </Target>
   <ItemGroup>
-    <PackageReference Include="DevExpress.AspNetCore.Dashboard" Version="26.1.2-beta" />
-    <PackageReference Include="DevExpress.Drawing.Skia" Version="26.1.2-beta" />
+    <PackageReference Include="DevExpress.AspNetCore.Dashboard" Version="26.1.5" />
+    <PackageReference Include="DevExpress.Drawing.Skia" Version="26.1.5" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119.0" />
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
     <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
     <PackageReference Include="Azure.AI.OpenAI" Version="2.9.0-beta.1" />
-    <PackageReference Include="DevExpress.AIIntegration.Agents" Version="26.1.2-beta" />
-    <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.5.0" />
-    <PackageReference Include="Microsoft.Extensions.AI" Version="10.6.0" />
-    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="10.6.0" />
+    <PackageReference Include="DevExpress.AIIntegration.Agents" Version="26.1.5" />
+    <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.17.0" />
+    <PackageReference Include="Microsoft.Extensions.AI" Version="10.8.0" />
+    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="10.8.0" />
   </ItemGroup>
 
   <ItemGroup>
